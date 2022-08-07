@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/runFragment2"
-        android:name="com.realityexpander.runningapp.ui.fragments.RunFragment"
+        android:name="com.realityexpander.bikingapp.ui.fragments.RunFragment"
         android:label="RunFragment" >
         <action
             android:id="@+id/action_runFragment2_to_trackingFragment"
@@ -13,15 +13,15 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.realityexpander.runningapp.ui.fragments.SettingsFragment"
+        android:name="com.realityexpander.bikingapp.ui.fragments.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/statisticsFragment"
-        android:name="com.realityexpander.runningapp.ui.fragments.StatisticsFragment"
+        android:name="com.realityexpander.bikingapp.ui.fragments.StatisticsFragment"
         android:label="StatisticsFragment" />
     <fragment
         android:id="@+id/setupFragment2"
-        android:name="com.realityexpander.runningapp.ui.fragments.SetupFragment"
+        android:name="com.realityexpander.bikingapp.ui.fragments.SetupFragment"
         android:label="SetupFragment" >
         <action
             android:id="@+id/action_setupFragment2_to_runFragment2"
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/trackingFragment"
-        android:name="com.realityexpander.runningapp.ui.fragments.TrackingFragment"
+        android:name="com.realityexpander.bikingapp.ui.fragments.TrackingFragment"
         android:label="TrackingFragment" >
         <action
             android:id="@+id/action_trackingFragment_to_runFragment2"
