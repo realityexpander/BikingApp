@@ -60,10 +60,10 @@ object AppModule {
     fun provideName(sharedPreferences: SharedPreferences) =
         sharedPreferences.getString(KEY_NAME, "") ?: ""
 
-    @Weight
+//    @Weight
     @Singleton
     @Provides
-//    @Named("weight")
+    @Named("weight")
     fun provideWeight(sharedPreferences: SharedPreferences) =
         sharedPreferences.getFloat(KEY_WEIGHT, 80f)
 

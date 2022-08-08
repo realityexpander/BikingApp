@@ -51,20 +51,27 @@ const val CANCEL_DIALOG_TAG = "CancelDialog"
 @AndroidEntryPoint
 class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLoadedCallback {
 
+    // works with no Named
 //    @set:Inject
-//    var weight: Float = 80f
+//    var weight: Float = 0f
 
-//    @JvmField
-//    @field:[Inject Named("weight")]
-//    var weight: Float = 80f
+    // DOES NOT WORK WITH Named
+//    @set:[Inject Named("weight")]
+//    var weight: Float = 0f
 
+    // works with Named annotation
     @JvmField
-    @field:[Inject Weight]
-    var weight: Float = 80f
+    @field:[Inject Named("weight")]
+    var weight: Float = 0f
+
+    // works with custom annotation
+//    @JvmField
+//    @field:[Inject Weight]
+//    protected var weight: Float = 0f // works with protected
 
     @JvmField
     @field:[Inject Named("height")]
-    var height: Float = 80f
+    protected var height: Float = 0f
 
     @Inject
     @Named("String1")
