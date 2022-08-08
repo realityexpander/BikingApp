@@ -2,7 +2,7 @@ package com.realityexpander.bikingapp.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.realityexpander.bikingapp.db.Run
+import com.realityexpander.bikingapp.db.Ride
 import com.realityexpander.bikingapp.other.TrackingUtility
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
@@ -20,7 +20,7 @@ import java.util.*
  */
 @SuppressLint("ViewConstructor")
 class CustomMarkerView(
-    val runs: List<Run>,
+    val rides: List<Ride>,
     c: Context,
     layoutId: Int
 ) : MarkerView(c, layoutId) {
@@ -30,7 +30,7 @@ class CustomMarkerView(
             return
         }
         val curRunId = e.x.toInt()
-        val run = runs[curRunId]
+        val run = rides[curRunId]
         val calendar = Calendar.getInstance().apply {
             timeInMillis = run.timestamp
         }
@@ -40,13 +40,16 @@ class CustomMarkerView(
         "${run.avgSpeedInKMH}km/h".also {
             tvAvgSpeed.text = it
         }
+
         "${run.distanceInMeters / 1000f}km".also {
             tvDistance.text = it
         }
+
         tvDuration.text =
             TrackingUtility.getFormattedStopWatchTime(
                 run.timeInMillis
             )
+
         "${run.caloriesBurned}kcal".also {
             tvCaloriesBurned.text = it
         }

@@ -56,9 +56,11 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     private fun writePersonalDataToSharedPref(): Boolean {
         val name = etName.text.toString()
         val weightText = etWeight.text.toString()
+
         if (name.isEmpty() || weightText.isEmpty()) {
             return false
         }
+
         sharedPref.edit()
             .putString(KEY_NAME, name)
             .putFloat(KEY_WEIGHT, weightText.toFloat())
@@ -66,6 +68,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
             .apply()
         val toolbarText = "Let's go, $name!"
         requireActivity().tvToolbarTitle.text = toolbarText
+
         return true
     }
 

@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.realityexpander.bikingapp.db.RunDao
-import com.realityexpander.bikingapp.db.RunningDatabase
+import com.realityexpander.bikingapp.db.RideDao
+import com.realityexpander.bikingapp.db.RideDatabase
 import com.realityexpander.bikingapp.other.Constants.Companion.DATABASE_NAME
 import com.realityexpander.bikingapp.other.Constants.Companion.KEY_FIRST_TIME_TOGGLE
 import com.realityexpander.bikingapp.other.Constants.Companion.KEY_NAME
@@ -26,16 +26,16 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideAppDb(app: Application): RunningDatabase {
-        return Room.databaseBuilder(app, RunningDatabase::class.java, DATABASE_NAME)
+    fun provideAppDb(app: Application): RideDatabase {
+        return Room.databaseBuilder(app, RideDatabase::class.java, DATABASE_NAME)
             .fallbackToDestructiveMigration()
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideRunDao(db: RunningDatabase): RunDao {
-        return db.getRunDao()
+    fun provideRunDao(db: RideDatabase): RideDao {
+        return db.getRideDao()
     }
 
     @Singleton

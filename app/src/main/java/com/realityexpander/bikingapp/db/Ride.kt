@@ -4,8 +4,8 @@ import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "running_table")
-data class Run(
+@Entity(tableName = "ride_table")
+data class Ride(
     var img: Bitmap? = null,
     var timestamp: Long = 0L,
     var avgSpeedInKMH: Float = 0f,

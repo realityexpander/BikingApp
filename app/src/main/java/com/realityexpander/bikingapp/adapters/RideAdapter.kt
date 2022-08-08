@@ -7,21 +7,21 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.realityexpander.bikingapp.R
-import com.realityexpander.bikingapp.db.Run
+import com.realityexpander.bikingapp.db.Ride
 import com.realityexpander.bikingapp.other.TrackingUtility
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_run.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
+class RideAdapter : RecyclerView.Adapter<RideAdapter.RunViewHolder>() {
 
-    private val diffCallback = object : DiffUtil.ItemCallback<Run>() {
-        override fun areItemsTheSame(oldItem: Run, newItem: Run): Boolean {
+    private val diffCallback = object : DiffUtil.ItemCallback<Ride>() {
+        override fun areItemsTheSame(oldItem: Ride, newItem: Ride): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Run, newItem: Run): Boolean {
+        override fun areContentsTheSame(oldItem: Ride, newItem: Ride): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
     }
@@ -31,7 +31,7 @@ class RunAdapter : RecyclerView.Adapter<RunAdapter.RunViewHolder>() {
 
     inner class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    fun submitList(list: List<Run>) = differ.submitList(list)
+    fun submitList(list: List<Ride>) = differ.submitList(list)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunViewHolder {
         return RunViewHolder(

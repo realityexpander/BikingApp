@@ -6,7 +6,7 @@ import androidx.room.TypeConverter
 import java.io.ByteArrayOutputStream
 
 /**
- * Converter class to save bitmaps in the Room Database
+ * Converter class to save bitmaps in the Room Database (for the map image)
  */
 class Converters {
 

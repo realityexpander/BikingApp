@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.realityexpander.bikingapp.R
-import com.realityexpander.bikingapp.adapters.RunAdapter
+import com.realityexpander.bikingapp.adapters.RideAdapter
 import com.realityexpander.bikingapp.other.Constants.Companion.REQUEST_CODE_LOCATION_PERMISSION
 import com.realityexpander.bikingapp.other.SortType
 import com.realityexpander.bikingapp.other.TrackingUtility
@@ -25,16 +25,16 @@ import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
 @AndroidEntryPoint
-class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionCallbacks {
+class RideFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionCallbacks {
 
-    lateinit var runAdapter: RunAdapter
+    lateinit var rideAdapter: RideAdapter
 
     private val viewModel: MainViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //viewModel = (activity as MainActivity).mainViewModel
-        runAdapter = RunAdapter()
+        rideAdapter = RideAdapter()
 
         setupRecyclerView()
         requestPermissions()
@@ -44,13 +44,13 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
 
         when (viewModel.sortType) {
             SortType.DATE -> spFilter.setSelection(0)
-            SortType.RUNNING_TIME -> spFilter.setSelection(1)
+            SortType.BIKING_TIME -> spFilter.setSelection(1)
             SortType.DISTANCE -> spFilter.setSelection(2)
             SortType.AVG_SPEED -> spFilter.setSelection(3)
             SortType.CALORIES_BURNED -> spFilter.setSelection(4)
         }
         viewModel.runs.observe(viewLifecycleOwner, Observer { runs ->
-            runAdapter.submitList(runs)
+            rideAdapter.submitList(runs)
         })
 
         spFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -64,7 +64,7 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
             ) {
                 when (pos) {
                     0 -> viewModel.sortRuns(SortType.DATE)
-                    1 -> viewModel.sortRuns(SortType.RUNNING_TIME)
+                    1 -> viewModel.sortRuns(SortType.BIKING_TIME)
                     2 -> viewModel.sortRuns(SortType.DISTANCE)
                     3 -> viewModel.sortRuns(SortType.AVG_SPEED)
                     4 -> viewModel.sortRuns(SortType.CALORIES_BURNED)
@@ -89,7 +89,8 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.layoutPosition
-            val run = runAdapter.differ.currentList[position]
+            val run = rideAdapter.differ.currentList[position]
+
             viewModel.deleteRun(run)
             Snackbar.make(requireView(), "Successfully deleted run", Snackbar.LENGTH_LONG).apply {
                 setAction("Undo") {
@@ -101,7 +102,7 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
     }
 
     private fun setupRecyclerView() = rvRuns.apply {
-        adapter = runAdapter
+        adapter = rideAdapter
         layoutManager = LinearLayoutManager(activity)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this)
     }

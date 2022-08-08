@@ -1,15 +1,28 @@
 package com.realityexpander.bikingapp.ui.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.snackbar.Snackbar
 import com.realityexpander.bikingapp.R
-import com.realityexpander.bikingapp.db.Run
+import com.realityexpander.bikingapp.db.Ride
 import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_PAUSE_SERVICE
 import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
 import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_STOP_SERVICE
@@ -20,12 +33,6 @@ import com.realityexpander.bikingapp.other.Constants.Companion.POLYLINE_WIDTH
 import com.realityexpander.bikingapp.other.TrackingUtility
 import com.realityexpander.bikingapp.services.TrackingService
 import com.realityexpander.bikingapp.ui.MainViewModel
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tracking.*
 import timber.log.Timber
@@ -33,10 +40,11 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.math.round
 
+
 const val CANCEL_DIALOG_TAG = "CancelDialog"
 
 @AndroidEntryPoint
-class TrackingFragment : Fragment(R.layout.fragment_tracking) {
+class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLoadedCallback {
 
     @set:Inject
     var weight: Float = 80f
@@ -87,6 +95,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             addAllPolylines()
         }
         subscribeToObservers()
+
     }
 
     /**
@@ -133,6 +142,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
                 .color(POLYLINE_COLOR)
                 .width(POLYLINE_WIDTH)
                 .addAll(polyline)
+
             map?.addPolyline(polylineOptions)
         }
     }
@@ -160,6 +170,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
      */
     private fun updateTracking(isTracking: Boolean) {
         this.isTracking = isTracking
+
         if (!isTracking && curTimeInMillis > 0L) {
             btnToggleRun.text = getString(R.string.start_text)
             btnFinishRun.visibility = View.VISIBLE
@@ -243,25 +254,94 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
      * Saves the recent run in the Room database and ends it
      */
     private fun endRunAndSaveToDB() {
-        map?.snapshot { bmp ->
-            var distanceInMeters = 0
-            for (polyline in pathPoints) {
-                distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
+
+//        mapView.isDrawingCacheEnabled = true
+//        runBlocking {
+//            delay(2000)
+//        }
+
+
+        val callback: SnapshotReadyCallback = object : SnapshotReadyCallback {
+            var bmp: Bitmap? = null
+            override fun onSnapshotReady(snapshot: Bitmap?) {
+                bmp = snapshot
+
+//                val screenView = view?.rootView
+//                screenView?.isDrawingCacheEnabled = true
+//                val bmp = Bitmap.createBitmap(screenView!!.drawingCache)
+//                screenView.isDrawingCacheEnabled = false
+
+//                mapView?.isDrawingCacheEnabled = true
+//                val bmp = Bitmap.createBitmap(mapView.drawingCache)
+//                mapView?.isDrawingCacheEnabled = false
+
+                getScreenShotFromView(mapView, activity!!) { bmp2 ->
+
+                    var distanceInMeters = 0
+                    for (polyline in pathPoints) {
+                        distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
+                    }
+                    val avgSpeed =
+                        round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
+                    val timestamp = Calendar.getInstance().timeInMillis
+                    val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
+                    val ride =
+                        Ride(bmp, timestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
+                    viewModel.insertRun(ride)
+
+                    Snackbar.make(
+                        requireActivity().findViewById(R.id.rootView),
+                        "Run saved successfully.",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+
+                    stopRun()
+                }
+
+
+//                try {
+//                    file = File(
+//                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+//                        "map.png"
+//                    )
+//                    val fout = FileOutputStream(file)
+//                    bitmap!!.compress(Bitmap.CompressFormat.PNG, 90, fout)
+//                    Toast.makeText(this@PastValuations, "Capture", Toast.LENGTH_SHORT).show()
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
+//                    Toast.makeText(this@PastValuations, "Not Capture", Toast.LENGTH_SHORT).show()
+//                }
             }
-            val avgSpeed =
-                round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
-            val timestamp = Calendar.getInstance().timeInMillis
-            val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
-            val run =
-                Run(bmp, timestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
-            viewModel.insertRun(run)
-            Snackbar.make(
-                requireActivity().findViewById(R.id.rootView),
-                "Run saved successfully.",
-                Snackbar.LENGTH_LONG
-            ).show()
-            stopRun()
+
         }
+        map?.setOnMapLoadedCallback {
+            // Toast.makeText(requireContext(), "Saving...", Toast.LENGTH_SHORT).show()
+            map?.snapshot(callback)
+        }
+
+
+
+//        map?.snapshot { bmp ->
+//            var distanceInMeters = 0
+//            for (polyline in pathPoints) {
+//                distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
+//            }
+//            val avgSpeed =
+//                round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
+//            val timestamp = Calendar.getInstance().timeInMillis
+//            val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
+//            val run =
+//                Run(bmp, timestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
+//            viewModel.insertRun(run)
+//
+//            Snackbar.make(
+//                requireActivity().findViewById(R.id.rootView),
+//                "Run saved successfully.",
+//                Snackbar.LENGTH_LONG
+//            ).show()
+//
+//            stopRun()
+//        }
     }
 
     /**
@@ -334,4 +414,43 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
         mapView.onLowMemory()
     }
 
+    fun getScreenShotFromView(view: View, activity: Activity, callback: (Bitmap) -> Unit) {
+        activity.window?.let { window ->
+            val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+            val locationOfViewInWindow = IntArray(2)
+            view.getLocationInWindow(locationOfViewInWindow)
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    PixelCopy.request(
+                        window,
+                        Rect(
+                            locationOfViewInWindow[0],
+                            locationOfViewInWindow[1],
+                            locationOfViewInWindow[0] + view.width,
+                            locationOfViewInWindow[1] + view.height
+                        ), bitmap, { copyResult ->
+                            if (copyResult == PixelCopy.SUCCESS) {
+                                callback(bitmap) }
+                            else {
+
+                            }
+                            // possible to handle other result codes ...
+                        },
+                        Handler()
+                    )
+                }
+            } catch (e: IllegalArgumentException) {
+                // PixelCopy may throw IllegalArgumentException, make sure to handle it
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun onMapLoaded() {
+//        if (isFirstLoad) {
+//            isFirstLoad = false
+//            animateCamera(curLatLng)
+//        }
+        Toast.makeText(context, "Map Loaded", Toast.LENGTH_SHORT).show()
+    }
 }

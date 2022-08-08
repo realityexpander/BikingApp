@@ -1,31 +1,31 @@
 package com.realityexpander.bikingapp.repositories
 
-import com.realityexpander.bikingapp.db.Run
-import com.realityexpander.bikingapp.db.RunDao
+import com.realityexpander.bikingapp.db.Ride
+import com.realityexpander.bikingapp.db.RideDao
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
-    val runDao: RunDao
+    val rideDao: RideDao
 ) {
-    suspend fun insertRun(run: Run) = runDao.insertRun(run)
+    suspend fun insertRun(ride: Ride) = rideDao.insertRun(ride)
 
-    suspend fun deleteRun(run: Run) = runDao.deleteRun(run)
+    suspend fun deleteRun(ride: Ride) = rideDao.deleteRun(ride)
 
-    fun getAllRunsSortedByDate() = runDao.getAllRunsSortedByDate()
+    fun getAllRunsSortedByDate() = rideDao.getAllRunsSortedByDate()
 
-    fun getAllRunsSortedByTimeInMillis() = runDao.getAllRunsSortedByTimeInMillis()
+    fun getAllRunsSortedByTimeInMillis() = rideDao.getAllRunsSortedByTimeInMillis()
 
-    fun getAllRunsSortedByDistance() = runDao.getAllRunsSortedByDistance()
+    fun getAllRunsSortedByDistance() = rideDao.getAllRunsSortedByDistance()
 
-    fun getAllRunsSortedByCaloriesBurned() = runDao.getAllRunsSortedByCaloriesBurned()
+    fun getAllRunsSortedByCaloriesBurned() = rideDao.getAllRunsSortedByCaloriesBurned()
 
-    fun getAllRunsSortedByAvgSpeed() = runDao.getAllRunsSortedByAvgSpeed()
+    fun getAllRunsSortedByAvgSpeed() = rideDao.getAllRunsSortedByAvgSpeed()
 
-    fun getTotalDistance() = runDao.getTotalDistance()
+    fun getTotalDistance() = rideDao.getTotalDistance()
 
-    fun getTotalTimeInMillis() = runDao.getTotalTimeInMillis()
+    fun getTotalTimeInMillis() = rideDao.getTotalTimeInMillis()
 
-    fun getTotalAvgSpeed() = runDao.getTotalAvgSpeed()
+    fun getTotalAvgSpeed() = rideDao.getTotalAvgSpeed()
 
-    fun getTotalCaloriesBurned() = runDao.getTotalCaloriesBurned()
+    fun getTotalCaloriesBurned() = rideDao.getTotalCaloriesBurned()
 }

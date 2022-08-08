@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/runFragment2"
-        android:name="com.realityexpander.bikingapp.ui.fragments.RunFragment"
+        android:name="com.realityexpander.bikingapp.ui.fragments.RideFragment"
         android:label="RunFragment" >
         <action
             android:id="@+id/action_runFragment2_to_trackingFragment"
