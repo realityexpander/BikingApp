@@ -32,6 +32,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
             val navOptions = NavOptions.Builder()
                 .setPopUpTo(R.id.setupFragment2, true)
                 .build()
+
             findNavController().navigate(
                 R.id.action_setupFragment2_to_runFragment2,
                 savedInstanceState,
@@ -41,6 +42,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
 
         tvContinue.setOnClickListener {
             val success = writePersonalDataToSharedPref()
+
             if (success) {
                 findNavController().navigate(R.id.action_setupFragment2_to_runFragment2)
             } else {
