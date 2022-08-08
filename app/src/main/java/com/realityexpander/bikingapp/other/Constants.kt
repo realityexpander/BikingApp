@@ -40,6 +40,7 @@ class Constants {
         const val SHARED_PREFERENCES_NAME = "sharedPref"
         const val KEY_NAME = "KEY_NAME"
         const val KEY_WEIGHT = "KEY_WEIGHT"
+        const val KEY_HEIGHT = "KEY_HEIGHT"
         const val KEY_FIRST_TIME_TOGGLE = "KEY_FIRST_TIME_TOGGLE"
 
         // Service Intent Actions

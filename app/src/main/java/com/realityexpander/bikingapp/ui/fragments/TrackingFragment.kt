@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.db.Ride
+import com.realityexpander.bikingapp.di.Weight
 import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_PAUSE_SERVICE
 import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
 import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_STOP_SERVICE
@@ -50,9 +51,24 @@ const val CANCEL_DIALOG_TAG = "CancelDialog"
 @AndroidEntryPoint
 class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLoadedCallback {
 
-    @Named("weight")
-    @set:Inject
+//    @set:Inject
+//    var weight: Float = 80f
+
+//    @JvmField
+//    @field:[Inject Named("weight")]
+//    var weight: Float = 80f
+
+    @JvmField
+    @field:[Inject Weight]
     var weight: Float = 80f
+
+    @JvmField
+    @field:[Inject Named("height")]
+    var height: Float = 80f
+
+    @Inject
+    @Named("String1")
+    lateinit var string1: String
 
     private var map: GoogleMap? = null
 
@@ -76,6 +92,8 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         super.onViewCreated(view, savedInstanceState)
         val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         mapView.onCreate(mapViewBundle)
+
+        println("weight: $weight, height: $height, string1: $string1")
 
         // restore dialog instance
         if(savedInstanceState != null) {
