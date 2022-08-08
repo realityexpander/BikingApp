@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BikingApp</string>
+    <string name="app_name">Biking App</string>
     <string name="your_runs">Your Runs</string>
     <string name="statistics">Statistics</string>
     <string name="settings">Settings</string>

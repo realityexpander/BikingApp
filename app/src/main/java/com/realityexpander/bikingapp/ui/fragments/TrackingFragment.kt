@@ -10,8 +10,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -64,7 +67,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
+        // setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -95,6 +98,41 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
             addAllPolylines()
         }
         subscribeToObservers()
+
+
+
+        val menuHost: MenuHost = requireActivity()
+
+        // Add menu items without using the Fragment Menu APIs
+        // Note how we can tie the MenuProvider to the viewLifecycleOwner
+        // and an optional Lifecycle.State (here, RESUMED) to indicate when
+        // the menu should be visible
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.toolbar_menu_tracking, menu)
+                this@TrackingFragment.menu = menu
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (menuItem.itemId) {
+                    R.id.miCancelTracking -> {
+                        showCancelTrackingDialog()
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            override fun onPrepareMenu(menu: Menu) {
+                super.onPrepareMenu(menu)
+
+                if (curTimeInMillis > 0L) {
+                    menu.getItem(0)?.isVisible = true // cancel tracking
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
     }
 
@@ -224,7 +262,8 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
     override fun onSaveInstanceState(outState: Bundle) {
         val mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY)
-        mapView?.onSaveInstanceState(mapViewBundle!!)
+
+        mapViewBundle?.let { mapView?.onSaveInstanceState(mapViewBundle) }
     }
 
     /**
@@ -354,29 +393,29 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         findNavController().navigate(R.id.action_trackingFragment_to_runFragment2)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.miCancelTracking -> {
-                showCancelTrackingDialog()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.miCancelTracking -> {
+//                showCancelTrackingDialog()
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
+//
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//        inflater.inflate(R.menu.toolbar_menu_tracking, menu)
+//        this.menu = menu
+//    }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.toolbar_menu_tracking, menu)
-        this.menu = menu
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        // just checking for isTracking doesnt trigger this when rotating the device
-        // in paused mode
-        if (curTimeInMillis > 0L) {
-            this.menu?.getItem(0)?.isVisible = true
-        }
-    }
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        super.onPrepareOptionsMenu(menu)
+//        // just checking for isTracking doesn't trigger this when rotating the device
+//        // in paused mode
+//        if (curTimeInMillis > 0L) {
+//            this.menu?.getItem(0)?.isVisible = true
+//        }
+//    }
 
     /**
      * Shows a dialog to cancel the current run.
