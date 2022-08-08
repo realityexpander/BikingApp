@@ -15,6 +15,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -50,6 +51,7 @@ object AppModule {
 
     @Singleton
     @Provides
+    @Named("weight")
     fun provideWeight(sharedPreferences: SharedPreferences) =
         sharedPreferences.getFloat(KEY_WEIGHT, 80f)
 

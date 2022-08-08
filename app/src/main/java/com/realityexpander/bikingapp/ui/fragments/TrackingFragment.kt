@@ -41,6 +41,7 @@ import kotlinx.android.synthetic.main.fragment_tracking.*
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.math.round
 
 
@@ -49,6 +50,7 @@ const val CANCEL_DIALOG_TAG = "CancelDialog"
 @AndroidEntryPoint
 class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLoadedCallback {
 
+    @Named("weight")
     @set:Inject
     var weight: Float = 80f
 
@@ -292,25 +294,10 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
      */
     private fun endRunAndSaveToDB() {
 
-//        mapView.isDrawingCacheEnabled = true
-//        runBlocking {
-//            delay(2000)
-//        }
-
-
         val callback: SnapshotReadyCallback = object : SnapshotReadyCallback {
             var bmp: Bitmap? = null
             override fun onSnapshotReady(snapshot: Bitmap?) {
                 bmp = snapshot
-
-//                val screenView = view?.rootView
-//                screenView?.isDrawingCacheEnabled = true
-//                val bmp = Bitmap.createBitmap(screenView!!.drawingCache)
-//                screenView.isDrawingCacheEnabled = false
-
-//                mapView?.isDrawingCacheEnabled = true
-//                val bmp = Bitmap.createBitmap(mapView.drawingCache)
-//                mapView?.isDrawingCacheEnabled = false
 
                 getScreenShotFromView(mapView, activity!!) { bmp2 ->
 
@@ -334,20 +321,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
                     stopRun()
                 }
-
-
-//                try {
-//                    file = File(
-//                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-//                        "map.png"
-//                    )
-//                    val fout = FileOutputStream(file)
-//                    bitmap!!.compress(Bitmap.CompressFormat.PNG, 90, fout)
-//                    Toast.makeText(this@PastValuations, "Capture", Toast.LENGTH_SHORT).show()
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                    Toast.makeText(this@PastValuations, "Not Capture", Toast.LENGTH_SHORT).show()
-//                }
             }
 
         }
@@ -356,29 +329,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
             map?.snapshot(callback)
         }
 
-
-
-//        map?.snapshot { bmp ->
-//            var distanceInMeters = 0
-//            for (polyline in pathPoints) {
-//                distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
-//            }
-//            val avgSpeed =
-//                round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
-//            val timestamp = Calendar.getInstance().timeInMillis
-//            val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
-//            val run =
-//                Run(bmp, timestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
-//            viewModel.insertRun(run)
-//
-//            Snackbar.make(
-//                requireActivity().findViewById(R.id.rootView),
-//                "Run saved successfully.",
-//                Snackbar.LENGTH_LONG
-//            ).show()
-//
-//            stopRun()
-//        }
     }
 
     /**
@@ -390,30 +340,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         stopTrackingService()
         findNavController().navigate(R.id.action_trackingFragment_to_runFragment2)
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.miCancelTracking -> {
-//                showCancelTrackingDialog()
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-//
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        super.onCreateOptionsMenu(menu, inflater)
-//        inflater.inflate(R.menu.toolbar_menu_tracking, menu)
-//        this.menu = menu
-//    }
-
-//    override fun onPrepareOptionsMenu(menu: Menu) {
-//        super.onPrepareOptionsMenu(menu)
-//        // just checking for isTracking doesn't trigger this when rotating the device
-//        // in paused mode
-//        if (curTimeInMillis > 0L) {
-//            this.menu?.getItem(0)?.isVisible = true
-//        }
-//    }
 
     /**
      * Shows a dialog to cancel the current run.
