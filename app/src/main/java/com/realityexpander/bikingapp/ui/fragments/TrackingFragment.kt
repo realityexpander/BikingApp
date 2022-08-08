@@ -69,7 +69,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
