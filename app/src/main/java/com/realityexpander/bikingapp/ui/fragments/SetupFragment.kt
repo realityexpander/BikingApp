@@ -40,7 +40,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
             )
         }
 
-        tvContinue.setOnClickListener {
+        btnContinue.setOnClickListener {
             val success = writePersonalDataToSharedPref()
 
             if (success) {

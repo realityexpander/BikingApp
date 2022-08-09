@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-@AndroidEntryPoint
+@AndroidEntryPoint  // To inject dependencies into fragments
 class MainActivity : AppCompatActivity() {
 
     @Inject
