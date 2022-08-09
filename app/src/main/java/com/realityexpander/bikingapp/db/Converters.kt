@@ -6,7 +6,7 @@ import androidx.room.TypeConverter
 import java.io.ByteArrayOutputStream
 
 /**
- * Converter class to save bitmaps in the Room Database (for the map image)
+ * Converter class to save & load bitmaps in the Room Database (for the map image)
  */
 class Converters {
 
@@ -19,6 +19,7 @@ class Converters {
     fun fromBitmap(bmp: Bitmap): ByteArray {
         val outputStream = ByteArrayOutputStream()
         bmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+
         return outputStream.toByteArray()
     }
 
