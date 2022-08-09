@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // Checks if we launched the activity from the notification, and if so, navigates to the tracking fragment
+    // Checks if we launched the activity from the notification, and if so, navigate to the tracking fragment
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         navigateToTrackingFragmentIfNeeded(intent)
