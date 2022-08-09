@@ -20,7 +20,7 @@ import com.realityexpander.bikingapp.common.TrackingUtility
 import com.realityexpander.bikingapp.ui.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_run.*
+import kotlinx.android.synthetic.main.fragment_ride.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 

@@ -10,7 +10,7 @@ import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.db.Ride
 import com.realityexpander.bikingapp.common.TrackingUtility
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.item_run.view.*
+import kotlinx.android.synthetic.main.item_ride.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 

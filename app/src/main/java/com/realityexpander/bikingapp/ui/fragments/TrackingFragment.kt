@@ -260,9 +260,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
      * Starts the tracking service or resumes it if it is currently paused.
      */
     private fun startOrResumeTrackingService() =
-        Intent(requireContext(), TrackingService::class.java).also {
-            it.action = ACTION_START_OR_RESUME_SERVICE
-            requireContext().startService(it)
+        Intent(requireContext(), TrackingService::class.java).also { intent ->
+            intent.action = ACTION_START_OR_RESUME_SERVICE
+            requireContext().startService(intent)  // deliver intent to the service
         }
 
     /**
