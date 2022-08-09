@@ -1,5 +1,6 @@
 package com.realityexpander.bikingapp.di
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -24,28 +25,30 @@ object ServiceModule {
 
     @ServiceScoped
     @Provides
+    @SuppressLint("VisibleForTests") // SuppressLint is used to suppress warnings about the visibility of the method
     fun providesFusedLocationProviderClient(
         @ApplicationContext context: Context
-    ) = FusedLocationProviderClient(context)
+    ): FusedLocationProviderClient = FusedLocationProviderClient(context)
 
     @ServiceScoped
     @Provides
     fun provideBaseNotificationBuilder(
         @ApplicationContext context: Context,
         pendingIntent: PendingIntent
-    ) = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
-        .setAutoCancel(false)
-        .setOngoing(true)
-        .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
-        .setContentTitle("Bike Tracking App")
-        .setContentText("00:00:00")
-        .setContentIntent(pendingIntent)
+    ): NotificationCompat.Builder =
+        NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setSmallIcon(R.drawable.ic_bike)
+            .setContentTitle("Bike Tracking App")
+            .setContentText("00:00:00")
+            .setContentIntent(pendingIntent)  // really should be called "setPendingIntent"
 
     @ServiceScoped
     @Provides
     fun provideActivityPendingIntent(
         @ApplicationContext context: Context
-    ) =
+    ): PendingIntent =
         PendingIntent.getActivity(
             context,
             0,

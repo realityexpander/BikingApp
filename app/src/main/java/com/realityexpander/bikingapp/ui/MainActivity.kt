@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navHostFragment.findNavController()) // use the nav controller to setup the bottom nav view
         bottomNavigationView.setOnNavigationItemReselectedListener { /* NO-OP */ }
 
-        navigateToTrackingFragmentIfNeeded(intent)
+        navigateToTrackingFragmentIfNeeded(intent)  // If the activity was destroyed and relaunched, and we need to navigate to the tracking fragment
 
         if(name.isNotEmpty()) {
             val toolbarTitle = "Let's go, $name!"
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    //Checks if we launched the activity from the notification
+    // Checks if we launched the activity from the notification, and if so, navigates to the tracking fragment
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         navigateToTrackingFragmentIfNeeded(intent)

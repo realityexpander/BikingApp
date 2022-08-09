@@ -49,7 +49,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
 
     private val timeRunInSeconds = MutableLiveData<Long>()
 
-    private var isFirstRun = true
+    private var isFirstTimeServiceStarted = true
     private var serviceKilled = false
 
     companion object {
@@ -95,9 +95,9 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
         intent?.let {
             when (it.action) {
                 ACTION_START_OR_RESUME_SERVICE -> {
-                    if(isFirstRun) {
-                        startForegroundService()
-                        isFirstRun = false
+                    if(isFirstTimeServiceStarted) {
+                        startForegroundService() // service should only be started once.
+                        isFirstTimeServiceStarted = false
                         serviceKilled = false
                     } else {
                         startTimer()
@@ -121,7 +121,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
      */
     private fun killService() {
         serviceKilled = true
-        isFirstRun = true
+        isFirstTimeServiceStarted = true
         pauseService()
         postInitialValues()
         stopForeground(true)
@@ -236,7 +236,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
             createNotificationChannel(notificationManager)
         }
 
-        startForeground(NOTIFICATION_ID, curNotification.build())
+        startForeground(NOTIFICATION_ID, curNotification.build()) // should be called "sendForegroundMessage", not "start"... ugh google.
         //curNotification = curNotification.setContentIntent(getActivityPendingIntent())
         startTimer()
         isTracking.postValue(true)
@@ -246,6 +246,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
             if(!serviceKilled) {
                 val notification = curNotification
                     .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
+
                 notificationManager.notify(NOTIFICATION_ID, notification.build())
             }
         }
@@ -284,7 +285,25 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {
-        val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, IMPORTANCE_LOW)
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            NOTIFICATION_CHANNEL_NAME,
+            IMPORTANCE_LOW  // keep the notification silent
+        )
         notificationManager.createNotificationChannel(channel)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
