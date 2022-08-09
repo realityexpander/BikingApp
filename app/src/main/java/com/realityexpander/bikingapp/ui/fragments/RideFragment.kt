@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.adapters.RideAdapter
-import com.realityexpander.bikingapp.other.Constants.Companion.REQUEST_CODE_LOCATION_PERMISSION
-import com.realityexpander.bikingapp.other.SortType
-import com.realityexpander.bikingapp.other.TrackingUtility
+import com.realityexpander.bikingapp.common.Constants.Companion.REQUEST_CODE_LOCATION_PERMISSION
+import com.realityexpander.bikingapp.common.SortType
+import com.realityexpander.bikingapp.common.TrackingUtility
 import com.realityexpander.bikingapp.ui.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +25,7 @@ import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
 @AndroidEntryPoint
-class RideFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionCallbacks {
+class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.PermissionCallbacks {
 
     lateinit var rideAdapter: RideAdapter
 
@@ -132,15 +132,23 @@ class RideFragment : Fragment(R.layout.fragment_run), EasyPermissions.Permission
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        // If permissions are denied, allow user to choose to go to app settings to manually grant permissions.
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            AppSettingsDialog.Builder(this).setThemeResId(R.style.AlertDialogTheme).build().show()
+            AppSettingsDialog.Builder(this)
+                .setThemeResId(R.style.AlertDialogTheme)
+                .build()
+                .show()
         } else {
             requestPermissions()
         }
     }
 
+    //////////////////////////////////////////
+    ///// Callbacks from EasyPermissions /////
+
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
 
+    // Pass this android system callback to EasyPermissions to handle the result of the permission request.
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

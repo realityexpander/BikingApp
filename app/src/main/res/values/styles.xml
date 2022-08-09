@@ -47,10 +47,12 @@
 
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

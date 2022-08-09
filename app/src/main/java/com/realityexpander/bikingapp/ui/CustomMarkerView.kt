@@ -3,7 +3,7 @@ package com.realityexpander.bikingapp.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import com.realityexpander.bikingapp.db.Ride
-import com.realityexpander.bikingapp.other.TrackingUtility
+import com.realityexpander.bikingapp.common.TrackingUtility
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight

@@ -17,16 +17,16 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import com.realityexpander.bikingapp.R
-import com.realityexpander.bikingapp.other.Constants
-import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_PAUSE_SERVICE
-import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
-import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_STOP_SERVICE
-import com.realityexpander.bikingapp.other.Constants.Companion.FASTEST_LOCATION_UPDATE_INTERVAL
-import com.realityexpander.bikingapp.other.Constants.Companion.LOCATION_UPDATE_INTERVAL
-import com.realityexpander.bikingapp.other.Constants.Companion.NOTIFICATION_CHANNEL_ID
-import com.realityexpander.bikingapp.other.Constants.Companion.NOTIFICATION_CHANNEL_NAME
-import com.realityexpander.bikingapp.other.Constants.Companion.NOTIFICATION_ID
-import com.realityexpander.bikingapp.other.TrackingUtility
+import com.realityexpander.bikingapp.common.Constants
+import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_PAUSE_SERVICE
+import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
+import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_STOP_SERVICE
+import com.realityexpander.bikingapp.common.Constants.Companion.FASTEST_LOCATION_UPDATE_INTERVAL
+import com.realityexpander.bikingapp.common.Constants.Companion.LOCATION_UPDATE_INTERVAL
+import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_CHANNEL_ID
+import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_CHANNEL_NAME
+import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_ID
+import com.realityexpander.bikingapp.common.TrackingUtility
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -45,7 +45,7 @@ typealias Polyline = MutableList<LatLng>
 typealias Polylines = MutableList<Polyline>
 
 @AndroidEntryPoint
-class TrackingService : LifecycleService() {
+class TrackingService : LifecycleService() {  // inherit from LifecycleService to use LiveData which needs LifeCycleOwner
 
     private val timeRunInSeconds = MutableLiveData<Long>()
 

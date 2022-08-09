@@ -1,4 +1,4 @@
-package com.realityexpander.bikingapp.other
+package com.realityexpander.bikingapp.common
 
 import android.graphics.Color
 import com.github.mikephil.charting.data.LineDataSet

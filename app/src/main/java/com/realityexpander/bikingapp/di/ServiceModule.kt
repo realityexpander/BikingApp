@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.realityexpander.bikingapp.R
-import com.realityexpander.bikingapp.other.Constants
+import com.realityexpander.bikingapp.common.Constants
 import com.realityexpander.bikingapp.ui.MainActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.Module

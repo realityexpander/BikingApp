@@ -1,4 +1,4 @@
-package com.realityexpander.bikingapp.other
+package com.realityexpander.bikingapp.common
 
 import android.Manifest
 import android.content.Context

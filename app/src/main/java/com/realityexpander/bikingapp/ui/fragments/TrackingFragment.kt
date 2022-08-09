@@ -26,15 +26,14 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.db.Ride
-import com.realityexpander.bikingapp.di.Weight
-import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_PAUSE_SERVICE
-import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
-import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_STOP_SERVICE
-import com.realityexpander.bikingapp.other.Constants.Companion.MAP_VIEW_BUNDLE_KEY
-import com.realityexpander.bikingapp.other.Constants.Companion.MAP_ZOOM
-import com.realityexpander.bikingapp.other.Constants.Companion.POLYLINE_COLOR
-import com.realityexpander.bikingapp.other.Constants.Companion.POLYLINE_WIDTH
-import com.realityexpander.bikingapp.other.TrackingUtility
+import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_PAUSE_SERVICE
+import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
+import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_STOP_SERVICE
+import com.realityexpander.bikingapp.common.Constants.Companion.MAP_VIEW_BUNDLE_KEY
+import com.realityexpander.bikingapp.common.Constants.Companion.MAP_ZOOM
+import com.realityexpander.bikingapp.common.Constants.Companion.POLYLINE_COLOR
+import com.realityexpander.bikingapp.common.Constants.Companion.POLYLINE_WIDTH
+import com.realityexpander.bikingapp.common.TrackingUtility
 import com.realityexpander.bikingapp.services.TrackingService
 import com.realityexpander.bikingapp.ui.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -97,10 +96,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         mapView.onCreate(mapViewBundle)
-
-        println("weight: $weight, height: $height, string1: $string1")
 
         // restore dialog instance
         if(savedInstanceState != null) {
@@ -119,6 +117,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
             endRunAndSaveToDB()
         }
 
+        // Get the map
         mapView.getMapAsync {
             map = it
             addAllPolylines()
@@ -434,7 +433,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     }
 
     override fun onMapLoaded() {
-//        if (isFirstLoad) {
+//        if (isFirstLoad) {  // todo fix this
 //            isFirstLoad = false
 //            animateCamera(curLatLng)
 //        }

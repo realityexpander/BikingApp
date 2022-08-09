@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.db.Ride
-import com.realityexpander.bikingapp.other.TrackingUtility
+import com.realityexpander.bikingapp.common.TrackingUtility
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_run.view.*
 import java.text.SimpleDateFormat
@@ -36,7 +36,7 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RunViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunViewHolder {
         return RunViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.item_run,
+                R.layout.item_ride,
                 parent,
                 false
             )

@@ -1,4 +1,4 @@
-package com.realityexpander.bikingapp.other
+package com.realityexpander.bikingapp.common
 
 /**
  * Describes the sort type of the run list

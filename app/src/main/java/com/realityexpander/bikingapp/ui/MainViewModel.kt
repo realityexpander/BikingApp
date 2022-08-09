@@ -4,7 +4,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.realityexpander.bikingapp.db.Ride
-import com.realityexpander.bikingapp.other.SortType
+import com.realityexpander.bikingapp.common.SortType
 import com.realityexpander.bikingapp.repositories.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

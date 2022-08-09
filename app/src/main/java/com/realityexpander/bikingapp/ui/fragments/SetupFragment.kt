@@ -7,9 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.realityexpander.bikingapp.R
-import com.realityexpander.bikingapp.other.Constants.Companion.KEY_FIRST_TIME_TOGGLE
-import com.realityexpander.bikingapp.other.Constants.Companion.KEY_NAME
-import com.realityexpander.bikingapp.other.Constants.Companion.KEY_WEIGHT
+import com.realityexpander.bikingapp.common.Constants.Companion.KEY_FIRST_TIME_TOGGLE
+import com.realityexpander.bikingapp.common.Constants.Companion.KEY_NAME
+import com.realityexpander.bikingapp.common.Constants.Companion.KEY_WEIGHT
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*

@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/runFragment2"
-        android:icon="@drawable/ic_run"
-        android:title="@string/your_runs" />
+        android:icon="@drawable/ic_bike"
+        android:title="@string/your_rides" />
 
     <item android:id="@+id/statisticsFragment"
         android:icon="@drawable/ic_graph"

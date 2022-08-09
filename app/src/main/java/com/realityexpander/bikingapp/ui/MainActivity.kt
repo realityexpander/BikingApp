@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.realityexpander.bikingapp.R
-import com.realityexpander.bikingapp.other.Constants.Companion.ACTION_SHOW_TRACKING_FRAGMENT
+import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_SHOW_TRACKING_FRAGMENT
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
