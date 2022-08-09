@@ -23,12 +23,12 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     lateinit var sharedPref: SharedPreferences
 
     @set:Inject
-    var firstTimeAppOpen: Boolean = true
+    var isFirstTimeAppOpen: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!firstTimeAppOpen) {
+        if (!isFirstTimeAppOpen) {
             val navOptions = NavOptions.Builder()
                 .setPopUpTo(R.id.setupFragment2, true)
                 .build()
@@ -68,7 +68,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
             .putFloat(KEY_WEIGHT, weightText.toFloat())
             .putBoolean(KEY_FIRST_TIME_TOGGLE, false)
             .apply()
-        val toolbarText = "Let's go, $name!"
+        val toolbarText = "Let's ride, $name!"
         requireActivity().tvToolbarTitle.text = toolbarText
 
         return true

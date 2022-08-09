@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val mainRepository: MainRepository
+    val mainRepository: MainRepository   // Hilt automatically finds this dependency (rideDao)
 ) : ViewModel() {
 
     private val runsSortedByDate = mainRepository.getAllRunsSortedByDate()

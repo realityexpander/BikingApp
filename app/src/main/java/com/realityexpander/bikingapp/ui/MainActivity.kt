@@ -22,8 +22,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
-        bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
+        setSupportActionBar(toolbar)  // Show our toolbar
+        bottomNavigationView.setupWithNavController(navHostFragment.findNavController()) // use the nav controller to setup the bottom nav view
         bottomNavigationView.setOnNavigationItemReselectedListener { /* NO-OP */ }
 
         navigateToTrackingFragmentIfNeeded(intent)
@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         navHostFragment.findNavController()
+            // listen for navigation events, so we can update the UI appropriately
             .addOnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
                     R.id.setupFragment2, R.id.trackingFragment ->
