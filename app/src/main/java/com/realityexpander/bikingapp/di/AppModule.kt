@@ -46,7 +46,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRunDao(db: RideDatabase): RideDao {
+    fun provideRideDao(db: RideDatabase): RideDao {
         return db.getRideDao()
     }
 

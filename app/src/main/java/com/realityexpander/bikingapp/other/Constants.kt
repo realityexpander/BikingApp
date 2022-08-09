@@ -11,7 +11,7 @@ class Constants {
         const val REQUEST_CODE_LOCATION_PERMISSION = 0
 
         // Database
-        const val DATABASE_NAME = "running_db"
+        const val DATABASE_NAME = "ride_db"
 
         // Tracking Options
         const val LOCATION_UPDATE_INTERVAL = 5000L
