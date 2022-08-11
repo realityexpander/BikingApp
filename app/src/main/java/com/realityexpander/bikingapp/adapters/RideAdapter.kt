@@ -56,17 +56,17 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RunViewHolder>() {
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = run.timestamp
             }
-            val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
+            val dateFormat = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
             tvDate.text = dateFormat.format(calendar.time)
 
-            "${run.avgSpeedInKMH}km/h".also {
+            "${"%.2f".format(run.avgSpeedInKMH * 0.621371)} mp/h".also {
                 tvAvgSpeed.text = it
             }
-            "${run.distanceInMeters / 1000f}km".also {
+            "${"%.2f".format(run.distanceInMeters / 1000f * 0.621371)} mi".also {
                 tvDistance.text = it
             }
             tvTime.text = TrackingUtility.getFormattedStopWatchTime(run.timeInMillis)
-            "${run.caloriesBurned}kcal".also {
+            "${run.caloriesBurned} kcal".also {
                 tvCalories.text = it
             }
         }

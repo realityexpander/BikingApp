@@ -29,7 +29,10 @@ class TrackingUtility {
         }
 
         // Converts milliseconds to HH:MM:SS string, optionally with milliseconds HH:MM:SS.mm
-        fun getFormattedStopWatchTime(ms: Long, includeMillis: Boolean = false): String {
+        fun getFormattedStopWatchTime(
+            ms: Long,
+            includeMillis: Boolean = false
+        ): String {
             var milliseconds = ms
             val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
             milliseconds -= TimeUnit.HOURS.toMillis(hours)
@@ -38,9 +41,9 @@ class TrackingUtility {
             val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
 
             if (!includeMillis) {
-                return  "${if (hours < 10) "0"   else ""}$hours:" +
-                        "${if (minutes < 10) "0" else ""}$minutes:" +
-                        "${if (seconds < 10) "0" else ""}$seconds"
+                return  "${if (hours < 10) "0"   else ""}${hours}h" +
+                        "${if (minutes < 10) "0" else ""}${minutes}m" +
+                        "${if (seconds < 10) "0" else ""}${seconds}s"
             }
 
             milliseconds -= TimeUnit.SECONDS.toMillis(seconds)
