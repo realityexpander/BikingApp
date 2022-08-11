@@ -54,6 +54,7 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RideViewHolder>() {
             Glide
                 .with(this)
                 .load(ride.img)
+                .override(ride.img?.width ?: 800, ride.img?.width ?: 800)
                 .into(ivRideImage)
 
             val calendar = Calendar.getInstance().apply {

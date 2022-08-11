@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <Spinner
-        android:id="@+id/spFilter"
+        android:id="@+id/spSortType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
@@ -24,8 +24,8 @@
         android:layout_marginTop="4dp"
         android:text="Sort by:"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/spFilter"
-        app:layout_constraintEnd_toStartOf="@+id/spFilter"
+        app:layout_constraintBottom_toBottomOf="@+id/spSortType"
+        app:layout_constraintEnd_toStartOf="@+id/spSortType"
         app:layout_constraintHorizontal_bias="0.888"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spFilter" />
+        app:layout_constraintTop_toBottomOf="@+id/spSortType" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

@@ -305,11 +305,18 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
                         distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
                     }
                     val avgSpeed =
-                        round((distanceInMeters / 1000f) / (curElapsedRideTimeInMillis / 1000f / 60 / 60) * 10) / 10f
+                        round((distanceInMeters / 1000f) /
+                                (curElapsedRideTimeInMillis / 1000f / 60 / 60) * 10) / 10f
                     val timestamp = Calendar.getInstance().timeInMillis
                     val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
                     val ride =
-                        Ride(bmp, timestamp, avgSpeed, distanceInMeters, curElapsedRideTimeInMillis, caloriesBurned)
+                        Ride(bmp,
+                            timestamp,
+                            avgSpeed,
+                            distanceInMeters,
+                            curElapsedRideTimeInMillis,
+                            caloriesBurned
+                        )
 
                     // Add Ride to database
                     viewModel.insertRide(ride)

@@ -35,8 +35,6 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         super.onViewCreated(view, savedInstanceState)
 
         //viewModel = (activity as MainActivity).mainViewModel
-        rideAdapter = RideAdapter()
-        setupRecyclerView()
 
         requestPermissions()
 
@@ -44,19 +42,21 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
             findNavController().navigate(R.id.action_rideFragment_to_trackingFragment)
         }
 
-        when (viewModel.sortType) {
-            SortType.DATE -> spFilter.setSelection(0)
-            SortType.BIKING_TIME -> spFilter.setSelection(1)
-            SortType.DISTANCE -> spFilter.setSelection(2)
-            SortType.AVG_SPEED -> spFilter.setSelection(3)
-            SortType.CALORIES_BURNED -> spFilter.setSelection(4)
-        }
-        viewModel.rides.observe(viewLifecycleOwner, Observer { rides ->
-            rideAdapter.submitList(rides)
-        })
+        // Setup the current sort type selection for spinner
+//        when (viewModel.sortType) {
+//            SortType.DATE -> spSortType.setSelection(0)
+//            SortType.BIKING_TIME -> spSortType.setSelection(1)
+//            SortType.DISTANCE -> spSortType.setSelection(2)
+//            SortType.AVG_SPEED -> spSortType.setSelection(3)
+//            SortType.CALORIES_BURNED -> spSortType.setSelection(4)
+//        }
+        spSortType.setSelection(viewModel.sortType.value?.ordinal ?: 0)
 
-        spFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        // Setup the sort type spinner selection listener
+        spSortType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                println("onNothingSelected")
+            }
 
             override fun onItemSelected(
                 adapterView: AdapterView<*>?,
@@ -64,15 +64,23 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
                 pos: Int,
                 id: Long
             ) {
-                when (pos) {
-                    0 -> viewModel.sortRides(SortType.DATE)
-                    1 -> viewModel.sortRides(SortType.BIKING_TIME)
-                    2 -> viewModel.sortRides(SortType.DISTANCE)
-                    3 -> viewModel.sortRides(SortType.AVG_SPEED)
-                    4 -> viewModel.sortRides(SortType.CALORIES_BURNED)
-                }
+//                when (pos) {
+//                    0 -> viewModel.sortRides(SortType.DATE)
+//                    1 -> viewModel.sortRides(SortType.BIKING_TIME)
+//                    2 -> viewModel.sortRides(SortType.DISTANCE)
+//                    3 -> viewModel.sortRides(SortType.AVG_SPEED)
+//                    4 -> viewModel.sortRides(SortType.CALORIES_BURNED)
+//                }
+                viewModel.sortRides(SortType.values()[pos])
             }
         }
+
+        // Setup the recycler view
+        rideAdapter = RideAdapter()
+        setupRecyclerView()
+        viewModel.rides.observe(viewLifecycleOwner, Observer { rides ->
+            rideAdapter.submitList(rides)
+        })
     }
 
     private fun setupRecyclerView() = rvRides.apply {
