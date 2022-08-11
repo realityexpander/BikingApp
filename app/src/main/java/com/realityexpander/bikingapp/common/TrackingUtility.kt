@@ -41,8 +41,8 @@ class TrackingUtility {
             val seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds)
 
             if (!includeMillis) {
-                return  "${if (hours < 10) "0"   else ""}${hours}h" +
-                        "${if (minutes < 10) "0" else ""}${minutes}m" +
+                return  "${if (hours < 10) "0"   else ""}${hours}h " +
+                        "${if (minutes < 10) "0" else ""}${minutes}m " +
                         "${if (seconds < 10) "0" else ""}${seconds}s"
             }
 
