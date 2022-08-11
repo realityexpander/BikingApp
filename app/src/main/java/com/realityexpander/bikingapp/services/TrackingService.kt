@@ -263,7 +263,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Add the action buttons to the notification
+        // Update the action buttons to the notification
         // HACKY but no other way to do this (thanks google)
         curNotification.javaClass.getDeclaredField("mActions").apply {
             isAccessible = true
