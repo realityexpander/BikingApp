@@ -278,12 +278,14 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         }
         val width = mapView.width
         val height = mapView.height
+
+        // Dont use animation, we want to see the whole ride track immediately
         map?.moveCamera(
             CameraUpdateFactory.newLatLngBounds(
                 bounds.build(),
                 width,
                 height,
-                (height * 0.05f).toInt()
+                (height * 0.05f).toInt()  // padding to show whole track
             )
         )
     }
@@ -313,7 +315,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
                     viewModel.insertRide(ride)
 
                     Snackbar.make(
-                        requireActivity().findViewById(R.id.rootView),
+                        requireActivity().findViewById(R.id.rootView),  // Prevents crash by using the rootView which is the activity's view
                         "Ride saved successfully.",
                         Snackbar.LENGTH_LONG
                     ).show()

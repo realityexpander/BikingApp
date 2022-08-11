@@ -26,7 +26,7 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RideViewHolder>() {
         }
     }
 
-    // ListDiffer to efficiently deal with changes in the RecyclerView
+    // Run differ asynchronously
     val differ = AsyncListDiffer(this, diffCallback)
 
     inner class RideViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -51,7 +51,10 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RideViewHolder>() {
         val ride = differ.currentList[position]
         // set item data
         holder.itemView.apply {
-            Glide.with(this).load(ride.img).into(ivRideImage)
+            Glide
+                .with(this)
+                .load(ride.img)
+                .into(ivRideImage)
 
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = ride.timestamp
@@ -62,9 +65,11 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RideViewHolder>() {
             "${"%.2f".format(ride.avgSpeedInKMH * 0.621371)} mp/h".also {
                 tvAvgSpeed.text = it
             }
+
             "${"%.2f".format(ride.distanceInMeters / 1000f * 0.621371)} mi".also {
                 tvDistance.text = it
             }
+
             tvTime.text = TrackingUtility.getFormattedStopWatchTime(ride.timeInMillis)
             "${ride.caloriesBurned} kcal".also {
                 tvCalories.text = it
