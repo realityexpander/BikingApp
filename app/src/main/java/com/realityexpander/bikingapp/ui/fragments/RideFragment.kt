@@ -33,11 +33,13 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         //viewModel = (activity as MainActivity).mainViewModel
         rideAdapter = RideAdapter()
-
         setupRecyclerView()
+
         requestPermissions()
+
         fab.setOnClickListener {
             findNavController().navigate(R.id.action_runFragment2_to_trackingFragment)
         }
@@ -73,34 +75,6 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         }
     }
 
-    /**
-     * Handles swipe-to-delete
-     */
-    private val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
-        ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-    ) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val position = viewHolder.layoutPosition
-            val run = rideAdapter.differ.currentList[position]
-
-            viewModel.deleteRun(run)
-            Snackbar.make(requireView(), "Successfully deleted run", Snackbar.LENGTH_LONG).apply {
-                setAction("Undo") {
-                    viewModel.insertRun(run)
-                }
-                show()
-            }
-        }
-    }
-
     private fun setupRecyclerView() = rvRuns.apply {
         adapter = rideAdapter
         layoutManager = LinearLayoutManager(activity)
@@ -128,6 +102,32 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
             )
+        }
+    }
+
+    // Handle swipe-to-delete
+    private val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+        ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+    ) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.layoutPosition
+            val run = rideAdapter.differ.currentList[position]
+
+            viewModel.deleteRun(run)
+            Snackbar.make(requireView(), "Successfully deleted run", Snackbar.LENGTH_LONG).apply {
+                setAction("Undo") {
+                    viewModel.insertRun(run)
+                }
+                show()
+            }
         }
     }
 

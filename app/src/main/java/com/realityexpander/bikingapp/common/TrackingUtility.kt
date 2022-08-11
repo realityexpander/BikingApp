@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.location.Location
 import android.os.Build
-import com.realityexpander.bikingapp.services.Polyline
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.concurrent.TimeUnit
 
@@ -54,7 +53,7 @@ class TrackingUtility {
         }
 
         // Calculate length of polyline (list of lat/long points) in meters
-        fun calculatePolylineLength(polyline: Polyline): Float {
+        fun calculatePolylineLength(polyline: PolyLineOfLatLngs): Float {
             var distance = 0f
 
             for (i in 0..polyline.size - 2) {

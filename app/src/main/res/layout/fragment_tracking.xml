@@ -59,7 +59,7 @@
         android:id="@+id/tvLetsGo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Let's go, USERNAME!"
+        android:text="Let's ride, USERNAME!"
         android:textAlignment="center"
         android:textSize="50sp"
         android:visibility="gone"

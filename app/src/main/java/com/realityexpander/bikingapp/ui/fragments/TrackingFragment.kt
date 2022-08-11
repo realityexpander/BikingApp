@@ -21,7 +21,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
@@ -44,7 +43,7 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.round
-
+import com.realityexpander.bikingapp.common.PolyLineOfLatLngs
 
 const val CANCEL_DIALOG_TAG = "CancelDialog"
 
@@ -81,7 +80,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
     private var isTracking = false
     private var curElapsedRideTimeInMillis = 0L
-    private var pathPoints = mutableListOf<MutableList<LatLng>>()
+    private var pathSegments = mutableListOf<PolyLineOfLatLngs>()
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -125,7 +124,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         // Get the map
         mapView.getMapAsync {
             map = it
-            addAllPolylines()
+            addAllPolylinesToMap()
         }
         subscribeToObservers()
 
@@ -164,18 +163,16 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
     }
 
-    /**
-     * Subscribes to changes of LiveData objects
-     */
     private fun subscribeToObservers() {
         TrackingService.isTracking.observe(viewLifecycleOwner, Observer {
-            updateTracking(it)
+            updateTrackingUI(it)
         })
 
-        TrackingService.pathSegments.observe(viewLifecycleOwner, Observer {
-            pathPoints = it
-            addLatestPolyline()
-            moveCameraToUser()
+        TrackingService.pathSegments.observe(viewLifecycleOwner, Observer { segments ->
+            pathSegments = segments
+
+            addLatestPolylineToMap()
+            moveCameraToUserMostRecentLocation()
         })
 
         TrackingService.rideTimeElapsedInMillis.observe(viewLifecycleOwner, Observer {
@@ -185,25 +182,20 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         })
     }
 
-    /**
-     * Will move the camera to the user's location.
-     */
-    private fun moveCameraToUser() {
-        if (pathPoints.isNotEmpty() && pathPoints.last().isNotEmpty()) {
+    private fun moveCameraToUserMostRecentLocation() {
+        if (pathSegments.isNotEmpty() && pathSegments.last().isNotEmpty()) {
             map?.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                    pathPoints.last().last(),
+                    pathSegments.last().last(),
                     MAP_ZOOM
                 )
             )
         }
     }
 
-    /**
-     * Adds all polylines to the pathPoints list to display them after screen rotations
-     */
-    private fun addAllPolylines() {
-        for (polyline in pathPoints) {
+    // Adds all current pathSegments to map (after configuration change)
+    private fun addAllPolylinesToMap() {
+        for (polyline in pathSegments) {
             val polylineOptions = PolylineOptions()
                 .color(POLYLINE_COLOR)
                 .width(POLYLINE_WIDTH)
@@ -213,28 +205,22 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         }
     }
 
-    /**
-     * Draws a polyline between the two latest points.
-     */
-    private fun addLatestPolyline() {
-        // only add polyline if we have at least two elements in the last polyline
-        if (pathPoints.isNotEmpty() && pathPoints.last().size > 1) {
-            val preLastLatLng = pathPoints.last()[pathPoints.last().size - 2]
-            val lastLatLng = pathPoints.last().last()
+    private fun addLatestPolylineToMap() {
+        // only add polyline if there are at least two elements in the last polyline
+        if (pathSegments.isNotEmpty() && pathSegments.last().size > 1) {
+            val prevLastLatLng = pathSegments.last()[pathSegments.last().size - 2]
+            val lastLatLng = pathSegments.last().last()
             val polylineOptions = PolylineOptions()
                 .color(POLYLINE_COLOR)
                 .width(POLYLINE_WIDTH)
-                .add(preLastLatLng)
+                .add(prevLastLatLng)
                 .add(lastLatLng)
 
             map?.addPolyline(polylineOptions)
         }
     }
 
-    /**
-     * Updates the tracking variable and the UI accordingly
-     */
-    private fun updateTracking(isTracking: Boolean) {
+    private fun updateTrackingUI(isTracking: Boolean) {
         this.isTracking = isTracking
 
         if (!isTracking && curElapsedRideTimeInMillis > 0L) {
@@ -247,9 +233,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         }
     }
 
-    /**
-     * Toggles the tracking state
-     */
     @SuppressLint("MissingPermission")
     private fun toggleRideActive() {
         if (isTracking) {
@@ -262,27 +245,18 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         }
     }
 
-    /**
-     * Starts the tracking service or resumes it if it is currently paused.
-     */
     private fun startOrResumeTrackingService() =
         Intent(requireContext(), TrackingService::class.java).also { intent ->
             intent.action = ACTION_START_OR_RESUME_SERVICE
             requireContext().startService(intent)  // deliver intent to the service
         }
 
-    /**
-     * Pauses the tracking service
-     */
     private fun pauseTrackingService() =
         Intent(requireContext(), TrackingService::class.java).also {
             it.action = ACTION_PAUSE_SERVICE
             requireContext().startService(it)  // send message to the service
         }
 
-    /**
-     * Stops the tracking service.
-     */
     private fun stopTrackingService() =
         Intent(requireContext(), TrackingService::class.java).also {
             it.action = ACTION_STOP_SERVICE
@@ -295,13 +269,11 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         mapViewBundle?.let { mapView?.onSaveInstanceState(mapViewBundle) }
     }
 
-    /**
-     * Zooms out until the whole track is visible. Used to make a screenshot of the
-     * MapView to save it in the database
-     */
+    // Zoom out until the whole track is visible.
+    // Used to set screenshot of MapView for database.
     private fun zoomToWholeTrack() {
         val bounds = LatLngBounds.Builder()
-        for (polyline in pathPoints) {
+        for (polyline in pathSegments) {
             for (point in polyline) {
                 bounds.include(point)
             }
@@ -318,9 +290,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         )
     }
 
-    /**
-     * Saves the recent run in the Room database and ends it
-     */
+    //Save the recent ride database and end ride.
     private fun endRideAndSaveToDB() {
 
         val callback: SnapshotReadyCallback = object : SnapshotReadyCallback {
@@ -331,7 +301,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
                 getScreenShotFromView(mapView, activity!!) { bmp2 ->
 
                     var distanceInMeters = 0
-                    for (polyline in pathPoints) {
+                    for (polyline in pathSegments) {
                         distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
                     }
                     val avgSpeed =
@@ -344,7 +314,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
                     Snackbar.make(
                         requireActivity().findViewById(R.id.rootView),
-                        "Run saved successfully.",
+                        "Ride saved successfully.",
                         Snackbar.LENGTH_LONG
                     ).show()
 
@@ -360,19 +330,15 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
     }
 
-    /**
-     * Finishes the tracking.
-     */
+    // Finish tracking & return to home screen.
     private fun stopRide() {
-        Timber.d("STOPPING RUN")
-        tvTimer.text = "00:00:00:00"
+        Timber.d("Ride stopped")
+        tvTimer.text = "00:00:00.00"
         stopTrackingService()
-        findNavController().navigate(R.id.action_trackingFragment_to_runFragment2)
+
+        findNavController().navigate(R.id.action_trackingFragment_to_rideFragment2)
     }
 
-    /**
-     * Shows a dialog to cancel the current run.
-     */
     private fun showCancelTrackingDialog() {
         CancelRunDialog().apply {
             setYesListener {

@@ -2,6 +2,7 @@ package com.realityexpander.bikingapp.common
 
 import android.graphics.Color
 import com.github.mikephil.charting.data.LineDataSet
+import com.google.android.gms.maps.model.LatLng
 
 class Constants {
 
@@ -51,3 +52,6 @@ class Constants {
         const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
     }
 }
+
+typealias PolyLineOfLatLngs = MutableList<LatLng>  // list of points is a polyLine
+typealias SegmentsOfPolyLatLngLines = MutableList<PolyLineOfLatLngs> // list of polyLines is a segment

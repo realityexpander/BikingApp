@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
-    app:startDestination="@id/setupFragment2">
+    app:startDestination="@id/setupFragment">
 
     <fragment
         android:id="@+id/runFragment2"
@@ -20,11 +20,11 @@
         android:name="com.realityexpander.bikingapp.ui.fragments.StatisticsFragment"
         android:label="StatisticsFragment" />
     <fragment
-        android:id="@+id/setupFragment2"
+        android:id="@+id/setupFragment"
         android:name="com.realityexpander.bikingapp.ui.fragments.SetupFragment"
         android:label="SetupFragment" >
         <action
-            android:id="@+id/action_setupFragment2_to_runFragment2"
+            android:id="@+id/action_setupFragment_to_rideFragment"
             app:destination="@id/runFragment2" />
     </fragment>
     <fragment
@@ -32,7 +32,7 @@
         android:name="com.realityexpander.bikingapp.ui.fragments.TrackingFragment"
         android:label="TrackingFragment" >
         <action
-            android:id="@+id/action_trackingFragment_to_runFragment2"
+            android:id="@+id/action_trackingFragment_to_rideFragment2"
             app:destination="@id/runFragment2" />
     </fragment>
 

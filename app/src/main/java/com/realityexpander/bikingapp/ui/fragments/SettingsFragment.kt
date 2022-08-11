@@ -25,6 +25,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
         btnApplyChanges.setOnClickListener {
             val success = applyChangesToSharedPref()
+
             if(success) {
                 Snackbar.make(requireView(), "Saved changes", Snackbar.LENGTH_SHORT).show()
             } else {
@@ -36,6 +37,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun loadFieldsFromSharedPref() {
         val name = sharedPref.getString(KEY_NAME, "")
         val weight = sharedPref.getFloat(KEY_WEIGHT, 80f)
+
         etName.setText(name)
         etWeight.setText(weight.toString())
     }
@@ -50,7 +52,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             .putString(KEY_NAME, nameText)
             .putFloat(KEY_WEIGHT, weightText.toFloat())
             .apply()
-        val toolbarText = "Let's go, $nameText!"
+
+        val toolbarText = "Let's ride, $nameText!"
         requireActivity().tvToolbarTitle.text = toolbarText
         return true
     }

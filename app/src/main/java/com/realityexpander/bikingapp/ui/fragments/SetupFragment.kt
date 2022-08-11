@@ -30,11 +30,11 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
 
         if (!isFirstTimeAppOpen) {
             val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.setupFragment2, true)
+                .setPopUpTo(R.id.setupFragment, true) // clears the back stack
                 .build()
 
             findNavController().navigate(
-                R.id.action_setupFragment2_to_runFragment2,
+                R.id.action_setupFragment_to_rideFragment,
                 savedInstanceState,
                 navOptions
             )
@@ -44,7 +44,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
             val success = writePersonalDataToSharedPref()
 
             if (success) {
-                findNavController().navigate(R.id.action_setupFragment2_to_runFragment2)
+                findNavController().navigate(R.id.action_setupFragment_to_rideFragment)
             } else {
                 Snackbar.make(requireView(), "Please enter all the fields.", Snackbar.LENGTH_SHORT)
                     .show()
@@ -68,6 +68,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
             .putFloat(KEY_WEIGHT, weightText.toFloat())
             .putBoolean(KEY_FIRST_TIME_TOGGLE, false)
             .apply()
+
         val toolbarText = "Let's ride, $name!"
         requireActivity().tvToolbarTitle.text = toolbarText
 

@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         navigateToTrackingFragmentIfNeeded(intent)  // If the activity was destroyed and relaunched, and we need to navigate to the tracking fragment
 
         if(name.isNotEmpty()) {
-            val toolbarTitle = "Let's go, $name!"
+            val toolbarTitle = "Let's ride, $name!"
             tvToolbarTitle?.text = toolbarTitle
         }
 
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             // listen for navigation events, so we can update the UI appropriately
             .addOnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
-                    R.id.setupFragment2, R.id.trackingFragment ->
+                    R.id.setupFragment, R.id.trackingFragment ->
                         bottomNavigationView.visibility = View.GONE
                     else ->
                         bottomNavigationView.visibility = View.VISIBLE

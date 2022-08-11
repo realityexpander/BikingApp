@@ -28,6 +28,7 @@ import com.realityexpander.bikingapp.common.Constants.Companion.LOCATION_UPDATE_
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_CHANNEL_ID
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_CHANNEL_NAME
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_ID
+import com.realityexpander.bikingapp.common.SegmentsOfPolyLatLngLines
 import com.realityexpander.bikingapp.common.TrackingUtility
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -36,9 +37,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-
-typealias Polyline = MutableList<LatLng>  // list of points is a polyLine
-typealias SegmentOfPolylines = MutableList<Polyline> // list of polyLines is a segment
 
 @AndroidEntryPoint
 class TrackingService : LifecycleService() {  // inherit from LifecycleService to use LiveData which needs LifeCycleOwner
@@ -58,7 +56,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     companion object {
         val rideTimeElapsedInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
-        val pathSegments = MutableLiveData<SegmentOfPolylines>()
+        val pathSegments = MutableLiveData<SegmentsOfPolyLatLngLines>()
     }
 
     // Base notification builder that contains the settings every notification will have
