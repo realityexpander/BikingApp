@@ -15,24 +15,20 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.observe
+import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.common.Constants
 import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_PAUSE_SERVICE
 import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
 import com.realityexpander.bikingapp.common.Constants.Companion.ACTION_STOP_SERVICE
-import com.realityexpander.bikingapp.common.Constants.Companion.FASTEST_LOCATION_UPDATE_INTERVAL
+import com.realityexpander.bikingapp.common.Constants.Companion.LOCATION_UPDATE_FASTEST_INTERVAL
 import com.realityexpander.bikingapp.common.Constants.Companion.LOCATION_UPDATE_INTERVAL
+import com.realityexpander.bikingapp.common.Constants.Companion.LOCATION_UPDATE_MAXIMUM_WAIT_TIME
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_CHANNEL_ID
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_CHANNEL_NAME
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_ID
 import com.realityexpander.bikingapp.common.TrackingUtility
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,13 +37,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-typealias Polyline = MutableList<LatLng>
-typealias Polylines = MutableList<Polyline>
+typealias Polyline = MutableList<LatLng>  // list of points is a polyLine
+typealias SegmentOfPolylines = MutableList<Polyline> // list of polyLines is a segment
 
 @AndroidEntryPoint
 class TrackingService : LifecycleService() {  // inherit from LifecycleService to use LiveData which needs LifeCycleOwner
 
-    private val timeRunInSeconds = MutableLiveData<Long>()
+    private val timeRideInSeconds = MutableLiveData<Long>()
 
     private var isFirstTimeServiceStarted = true
     private var serviceKilled = false
@@ -55,7 +51,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     companion object {
         val timeRunInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
-        val pathPoints = MutableLiveData<Polylines>()
+        val pathSegments = MutableLiveData<SegmentOfPolylines>()
     }
 
     /**
@@ -86,8 +82,8 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     private fun postInitialValues() {
         timeRunInMillis.postValue(0L)
         isTracking.postValue(false)
-        pathPoints.postValue(mutableListOf())
-        timeRunInSeconds.postValue(0L)
+        pathSegments.postValue(mutableListOf())
+        timeRideInSeconds.postValue(0L)
     }
 
     // Respond to commands
@@ -135,10 +131,11 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     private fun updateLocationChecking(isTracking: Boolean) {
         if (isTracking) {
             if (TrackingUtility.hasLocationPermissions(this)) {
-                val request = LocationRequest().apply {
+                val request = LocationRequest.create().apply {
                     interval = LOCATION_UPDATE_INTERVAL
-                    fastestInterval = FASTEST_LOCATION_UPDATE_INTERVAL
-                    priority = PRIORITY_HIGH_ACCURACY
+                    fastestInterval = LOCATION_UPDATE_FASTEST_INTERVAL
+                    priority = Priority.PRIORITY_HIGH_ACCURACY
+                    maxWaitTime = LOCATION_UPDATE_MAXIMUM_WAIT_TIME
                 }
                 fusedLocationProviderClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
             }
@@ -148,15 +145,16 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     }
 
     /**
-     * Location Callback that receives location updates and adds them to pathPoints.
+     * Location Callback: receives location updates and adds the point to last item of pathSegments list.
      */
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
             super.onLocationResult(result)
+
             if(isTracking.value!!) {
                 result?.locations?.let { locations ->
                     for(location in locations) {
-                        addPathPoint(location)
+                        addPathPointToLastPathSegment(location)
                     }
                 }
             }
@@ -185,7 +183,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
                 timeRunInMillis.postValue(timeRun + lapTime)
                 // if a new second was reached, we want to update timeRunInSeconds, too
                 if (timeRunInMillis.value!! >= lastSecondTimestamp + 1000L) {
-                    timeRunInSeconds.postValue(timeRunInSeconds.value!! + 1)
+                    timeRideInSeconds.postValue(timeRideInSeconds.value!! + 1)
                     lastSecondTimestamp += 1000L
                 }
                 delay(Constants.TIMER_UPDATE_INTERVAL)
@@ -203,25 +201,26 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     }
 
     /**
-     * This adds the location to the last list of pathPoints.
+     * This adds a location to the last item pathSegments list.
      */
-    private fun addPathPoint(location: Location?) {
+    private fun addPathPointToLastPathSegment(location: Location?) {
         location?.let {
             val pos = LatLng(location.latitude, location.longitude)
-            pathPoints.value?.apply {
+
+            pathSegments.value?.apply {
                 last().add(pos)
-                pathPoints.postValue(this)
+                pathSegments.postValue(this)
             }
         }
     }
 
     /**
-     * Will add an empty polyline in the pathPoints list or initialize it if empty.
+     * Add an empty polyline in the pathSegments list or initialize it if empty.
      */
-    private fun addEmptyPolyline() = pathPoints.value?.apply {
+    private fun addEmptyPolyline() = pathSegments.value?.apply {
         add(mutableListOf())
-        pathPoints.postValue(this)
-    } ?: pathPoints.postValue(mutableListOf(mutableListOf()))
+        pathSegments.postValue(this)
+    } ?: pathSegments.postValue(mutableListOf(mutableListOf()))
 
     /**
      * Starts this service as a foreground service and creates the necessary notification
@@ -242,7 +241,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
         isTracking.postValue(true)
 
         // updating notification
-        timeRunInSeconds.observe(this) {
+        timeRideInSeconds.observe(this) {
             if(!serviceKilled) {
                 val notification = curNotification
                     .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))

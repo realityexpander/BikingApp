@@ -15,7 +15,8 @@ class Constants {
 
         // Tracking Options
         const val LOCATION_UPDATE_INTERVAL = 5000L
-        const val FASTEST_LOCATION_UPDATE_INTERVAL = 2000L
+        const val LOCATION_UPDATE_MAXIMUM_WAIT_TIME = 5000L
+        const val LOCATION_UPDATE_FASTEST_INTERVAL = 2000L
 
         // Map Options
         const val POLYLINE_COLOR = Color.RED

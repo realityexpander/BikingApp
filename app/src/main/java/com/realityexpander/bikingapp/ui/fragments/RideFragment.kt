@@ -49,7 +49,7 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
             SortType.AVG_SPEED -> spFilter.setSelection(3)
             SortType.CALORIES_BURNED -> spFilter.setSelection(4)
         }
-        viewModel.runs.observe(viewLifecycleOwner, Observer { runs ->
+        viewModel.rides.observe(viewLifecycleOwner, Observer { runs ->
             rideAdapter.submitList(runs)
         })
 

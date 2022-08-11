@@ -79,7 +79,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     private var map: GoogleMap? = null
 
     private var isTracking = false
-    private var curTimeInMillis = 0L
+    private var curElapsedRideTimeInMillis = 0L
     private var pathPoints = mutableListOf<MutableList<LatLng>>()
 
     private val viewModel: MainViewModel by viewModels()
@@ -102,7 +102,8 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
         // restore dialog instance
         if(savedInstanceState != null) {
-            val cancelRunDialog = parentFragmentManager.findFragmentByTag(CANCEL_DIALOG_TAG) as CancelRunDialog?
+            val cancelRunDialog =
+                parentFragmentManager.findFragmentByTag(CANCEL_DIALOG_TAG) as CancelRunDialog?
             cancelRunDialog?.setYesListener {
                 stopRun()
             }
@@ -151,7 +152,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
             override fun onPrepareMenu(menu: Menu) {
                 super.onPrepareMenu(menu)
 
-                if (curTimeInMillis > 0L) {
+                if (curElapsedRideTimeInMillis > 0L) {
                     menu.getItem(0)?.isVisible = true // cancel tracking
                 }
             }
@@ -167,14 +168,14 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
             updateTracking(it)
         })
 
-        TrackingService.pathPoints.observe(viewLifecycleOwner, Observer {
+        TrackingService.pathSegments.observe(viewLifecycleOwner, Observer {
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
         })
 
         TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {
-            curTimeInMillis = it
+            curElapsedRideTimeInMillis = it
             val formattedTime = TrackingUtility.getFormattedStopWatchTime(it, true)
             tvTimer.text = formattedTime
         })
@@ -232,8 +233,8 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     private fun updateTracking(isTracking: Boolean) {
         this.isTracking = isTracking
 
-        if (!isTracking && curTimeInMillis > 0L) {
-            btnToggleRun.text = getString(R.string.start_text)
+        if (!isTracking && curElapsedRideTimeInMillis > 0L) {
+            btnToggleRun.text = getString(R.string.continue_text)
             btnFinishRun.visibility = View.VISIBLE
         } else if (isTracking) {
             btnToggleRun.text = getString(R.string.stop_text)
@@ -329,11 +330,11 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
                         distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
                     }
                     val avgSpeed =
-                        round((distanceInMeters / 1000f) / (curTimeInMillis / 1000f / 60 / 60) * 10) / 10f
+                        round((distanceInMeters / 1000f) / (curElapsedRideTimeInMillis / 1000f / 60 / 60) * 10) / 10f
                     val timestamp = Calendar.getInstance().timeInMillis
                     val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
                     val ride =
-                        Ride(bmp, timestamp, avgSpeed, distanceInMeters, curTimeInMillis, caloriesBurned)
+                        Ride(bmp, timestamp, avgSpeed, distanceInMeters, curElapsedRideTimeInMillis, caloriesBurned)
                     viewModel.insertRun(ride)
 
                     Snackbar.make(

@@ -22,7 +22,7 @@ class MainViewModel @Inject constructor(
     private val runsSortedByAvgSpeed = mainRepository.getAllRunsSortedByAvgSpeed()
     private val runsSortedByCaloriesBurned = mainRepository.getAllRunsSortedByCaloriesBurned()
 
-    val runs = MediatorLiveData<List<Ride>>()
+    val rides = MediatorLiveData<List<Ride>>()
 
     var sortType = SortType.DATE
 
@@ -30,40 +30,40 @@ class MainViewModel @Inject constructor(
      * Posts the correct run list in the LiveData
      */
     init {
-        runs.addSource(runsSortedByDate) { result ->
+        rides.addSource(runsSortedByDate) { result ->
             Timber.d("RUNS SORTED BY DATE")
             if(sortType == SortType.DATE) {
-                result?.let { runs.value = it }
+                result?.let { rides.value = it }
             }
         }
-        runs.addSource(runsSortedByDistance) { result ->
+        rides.addSource(runsSortedByDistance) { result ->
             if(sortType == SortType.DISTANCE) {
-                result?.let { runs.value = it }
+                result?.let { rides.value = it }
             }
         }
-        runs.addSource(runsSortedByTimeInMillis) { result ->
+        rides.addSource(runsSortedByTimeInMillis) { result ->
             if(sortType == SortType.BIKING_TIME) {
-                result?.let { runs.value = it }
+                result?.let { rides.value = it }
             }
         }
-        runs.addSource(runsSortedByAvgSpeed) { result ->
+        rides.addSource(runsSortedByAvgSpeed) { result ->
             if(sortType == SortType.AVG_SPEED) {
-                result?.let { runs.value = it }
+                result?.let { rides.value = it }
             }
         }
-        runs.addSource(runsSortedByCaloriesBurned) { result ->
+        rides.addSource(runsSortedByCaloriesBurned) { result ->
             if(sortType == SortType.CALORIES_BURNED) {
-                result?.let { runs.value = it }
+                result?.let { rides.value = it }
             }
         }
     }
 
     fun sortRuns(sortType: SortType) = when(sortType) {
-        SortType.DATE -> runsSortedByDate.value?.let { runs.value = it }
-        SortType.DISTANCE -> runsSortedByDistance.value?.let { runs.value = it }
-        SortType.BIKING_TIME -> runsSortedByTimeInMillis.value?.let { runs.value = it }
-        SortType.AVG_SPEED -> runsSortedByAvgSpeed.value?.let { runs.value = it }
-        SortType.CALORIES_BURNED -> runsSortedByCaloriesBurned.value?.let { runs.value = it }
+        SortType.DATE -> runsSortedByDate.value?.let { rides.value = it }
+        SortType.DISTANCE -> runsSortedByDistance.value?.let { rides.value = it }
+        SortType.BIKING_TIME -> runsSortedByTimeInMillis.value?.let { rides.value = it }
+        SortType.AVG_SPEED -> runsSortedByAvgSpeed.value?.let { rides.value = it }
+        SortType.CALORIES_BURNED -> runsSortedByCaloriesBurned.value?.let { rides.value = it }
     }.also {
         this.sortType = sortType
     }
