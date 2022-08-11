@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.common.Constants
@@ -55,6 +56,9 @@ object ServiceModule {
             Intent(context, MainActivity::class.java).apply {
                 action = Constants.ACTION_SHOW_TRACKING_FRAGMENT
             },
-            PendingIntent.FLAG_UPDATE_CURRENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else
+                PendingIntent.FLAG_UPDATE_CURRENT
         )
 }
