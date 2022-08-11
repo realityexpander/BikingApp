@@ -8,6 +8,7 @@ import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.widget.Toast
 import androidx.core.view.MenuHost
@@ -100,22 +101,25 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         mapView.onCreate(mapViewBundle)
 
-        // restore dialog instance
+        // restore dialog instance (if needed) after configuration change
         if(savedInstanceState != null) {
             val cancelRunDialog =
                 parentFragmentManager.findFragmentByTag(CANCEL_DIALOG_TAG) as CancelRunDialog?
             cancelRunDialog?.setYesListener {
-                stopRun()
+                stopRide()
             }
         }
 
-        btnToggleRun.setOnClickListener {
-            toggleRun()
+        btnToggleRideActive.setOnClickListener {
+            // Delayed to allow the UI to update for click effect
+            Handler(Looper.getMainLooper()).postDelayed({
+                toggleRideActive()
+            }, 150)
         }
 
-        btnFinishRun.setOnClickListener {
+        btnFinishRide.setOnClickListener {
             zoomToWholeTrack()
-            endRunAndSaveToDB()
+            endRideAndSaveToDB()
         }
 
         // Get the map
@@ -174,7 +178,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
             moveCameraToUser()
         })
 
-        TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {
+        TrackingService.rideTimeElapsedInMillis.observe(viewLifecycleOwner, Observer {
             curElapsedRideTimeInMillis = it
             val formattedTime = TrackingUtility.getFormattedStopWatchTime(it, true)
             tvTimer.text = formattedTime
@@ -234,12 +238,12 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         this.isTracking = isTracking
 
         if (!isTracking && curElapsedRideTimeInMillis > 0L) {
-            btnToggleRun.text = getString(R.string.continue_text)
-            btnFinishRun.visibility = View.VISIBLE
+            btnToggleRideActive.text = getString(R.string.continue_text)
+            btnFinishRide.visibility = View.VISIBLE
         } else if (isTracking) {
-            btnToggleRun.text = getString(R.string.stop_text)
+            btnToggleRideActive.text = getString(R.string.pause_text)
             menu?.getItem(0)?.isVisible = true
-            btnFinishRun.visibility = View.GONE
+            btnFinishRide.visibility = View.GONE
         }
     }
 
@@ -247,13 +251,14 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
      * Toggles the tracking state
      */
     @SuppressLint("MissingPermission")
-    private fun toggleRun() {
+    private fun toggleRideActive() {
         if (isTracking) {
             menu?.getItem(0)?.isVisible = true
             pauseTrackingService()
+            Timber.d("Paused tracking service")
         } else {
             startOrResumeTrackingService()
-            Timber.d("Started service")
+            Timber.d("Started tracking service")
         }
     }
 
@@ -272,7 +277,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     private fun pauseTrackingService() =
         Intent(requireContext(), TrackingService::class.java).also {
             it.action = ACTION_PAUSE_SERVICE
-            requireContext().startService(it)
+            requireContext().startService(it)  // send message to the service
         }
 
     /**
@@ -316,7 +321,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     /**
      * Saves the recent run in the Room database and ends it
      */
-    private fun endRunAndSaveToDB() {
+    private fun endRideAndSaveToDB() {
 
         val callback: SnapshotReadyCallback = object : SnapshotReadyCallback {
             var bmp: Bitmap? = null
@@ -343,7 +348,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
                         Snackbar.LENGTH_LONG
                     ).show()
 
-                    stopRun()
+                    stopRide()
                 }
             }
 
@@ -358,7 +363,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     /**
      * Finishes the tracking.
      */
-    private fun stopRun() {
+    private fun stopRide() {
         Timber.d("STOPPING RUN")
         tvTimer.text = "00:00:00:00"
         stopTrackingService()
@@ -371,7 +376,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     private fun showCancelTrackingDialog() {
         CancelRunDialog().apply {
             setYesListener {
-                stopRun()
+                stopRide()
             }
         }.show(parentFragmentManager, CANCEL_DIALOG_TAG)
     }
