@@ -242,10 +242,12 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     // Updates the action buttons of the notification
     private fun updateNotificationTrackingState(isTracking: Boolean) {
         val notificationActionText = if (isTracking) "Pause" else "Resume"
+
         val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         } else
             PendingIntent.FLAG_UPDATE_CURRENT
+
         val pendingIntent = if (isTracking) {
             val pauseIntent = Intent(this, TrackingService::class.java).apply {
                 action = ACTION_PAUSE_SERVICE
@@ -257,6 +259,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
             }
             PendingIntent.getService(this, 2, resumeIntent, flags)
         }
+
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
