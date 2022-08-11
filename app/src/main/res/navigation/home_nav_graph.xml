@@ -11,7 +11,7 @@
         tools:layout="@layout/fragment_ride"
         android:label="RideFragment">
         <action
-            android:id="@+id/action_runFragment2_to_trackingFragment"
+            android:id="@+id/action_rideFragment_to_trackingFragment"
             app:destination="@id/trackingFragment" />
     </fragment>
     <fragment

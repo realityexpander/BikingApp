@@ -15,5 +15,5 @@ class StatisticsViewModel @Inject constructor(
     var totalAvgSpeed = mainRepository.getTotalAvgSpeed()
     var totalCaloriesBurned = mainRepository.getTotalCaloriesBurned()
 
-    var runsSortedByDate = mainRepository.getAllRunsSortedByDate()
+    var ridesSortedByDate = mainRepository.getAllRidesSortedByDate()
 }

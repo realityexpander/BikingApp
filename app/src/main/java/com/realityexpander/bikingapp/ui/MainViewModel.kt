@@ -16,51 +16,51 @@ class MainViewModel @Inject constructor(
     val mainRepository: MainRepository   // Hilt automatically finds this dependency (rideDao)
 ) : ViewModel() {
 
-    private val ridesSortedByDate = mainRepository.getAllRunsSortedByDate()
-    private val ridesSortedByDistance = mainRepository.getAllRunsSortedByDistance()
-    private val ridesSortedByTimeInMillis = mainRepository.getAllRunsSortedByTimeInMillis()
-    private val ridesSortedByAvgSpeed = mainRepository.getAllRunsSortedByAvgSpeed()
-    private val ridesSortedByCaloriesBurned = mainRepository.getAllRunsSortedByCaloriesBurned()
+    private val ridesSortedByDate = mainRepository.getAllRidesSortedByDate()
+    private val ridesSortedByDistance = mainRepository.getAllRidesSortedByDistance()
+    private val ridesSortedByTimeInMillis = mainRepository.getAllRidesSortedByTimeInMillis()
+    private val ridesSortedByAvgSpeed = mainRepository.getAllRidesSortedByAvgSpeed()
+    private val ridesSortedByCaloriesBurned = mainRepository.getAllRidesSortedByCaloriesBurned()
 
     val rides = MediatorLiveData<List<Ride>>()
 
     var sortType = SortType.DATE
 
-    // Sets correct run list in MediatorLiveData depending on sortType
+    // Sets correct ride list in MediatorLiveData depending on sortType
     init {
         rides.addSource(ridesSortedByDate) { result ->
-            Timber.d("RUNS SORTED BY DATE")
+            Timber.d("RIDES SORTED BY DATE")
             if(sortType == SortType.DATE) {
                 result?.let { rides.value = it }
             }
         }
         rides.addSource(ridesSortedByDistance) { result ->
             if(sortType == SortType.DISTANCE) {
-                Timber.d("RUNS SORTED BY DISTANCE")
+                Timber.d("RIDES SORTED BY DISTANCE")
                 result?.let { rides.value = it }
             }
         }
         rides.addSource(ridesSortedByTimeInMillis) { result ->
             if(sortType == SortType.BIKING_TIME) {
-                Timber.d("RUNS SORTED BY BIKING TIME")
+                Timber.d("RIDES SORTED BY BIKING TIME")
                 result?.let { rides.value = it }
             }
         }
         rides.addSource(ridesSortedByAvgSpeed) { result ->
             if(sortType == SortType.AVG_SPEED) {
-                Timber.d("RUNS SORTED BY AVG SPEED")
+                Timber.d("RIDES SORTED BY AVG SPEED")
                 result?.let { rides.value = it }
             }
         }
         rides.addSource(ridesSortedByCaloriesBurned) { result ->
             if(sortType == SortType.CALORIES_BURNED) {
-                Timber.d("RUNS SORTED BY CALORIES BURNED")
+                Timber.d("RIDES SORTED BY CALORIES BURNED")
                 result?.let { rides.value = it }
             }
         }
     }
 
-    fun sortRuns(sortType: SortType) = when(sortType) {
+    fun sortRides(sortType: SortType) = when(sortType) {
         SortType.DATE ->
             ridesSortedByDate.value?.let { rides.value = it }
         SortType.DISTANCE ->
@@ -75,11 +75,11 @@ class MainViewModel @Inject constructor(
         this.sortType = sortType
     }
 
-    fun insertRun(ride: Ride) = viewModelScope.launch {
-        mainRepository.insertRun(ride)
+    fun insertRide(ride: Ride) = viewModelScope.launch {
+        mainRepository.insertRide(ride)
     }
 
-    fun deleteRun(ride: Ride) = viewModelScope.launch {
-        mainRepository.deleteRun(ride)
+    fun deleteRide(ride: Ride) = viewModelScope.launch {
+        mainRepository.deleteRide(ride)
     }
 }

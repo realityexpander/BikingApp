@@ -41,7 +41,7 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         requestPermissions()
 
         fab.setOnClickListener {
-            findNavController().navigate(R.id.action_runFragment2_to_trackingFragment)
+            findNavController().navigate(R.id.action_rideFragment_to_trackingFragment)
         }
 
         when (viewModel.sortType) {
@@ -51,8 +51,8 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
             SortType.AVG_SPEED -> spFilter.setSelection(3)
             SortType.CALORIES_BURNED -> spFilter.setSelection(4)
         }
-        viewModel.rides.observe(viewLifecycleOwner, Observer { runs ->
-            rideAdapter.submitList(runs)
+        viewModel.rides.observe(viewLifecycleOwner, Observer { rides ->
+            rideAdapter.submitList(rides)
         })
 
         spFilter.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -65,17 +65,17 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
                 id: Long
             ) {
                 when (pos) {
-                    0 -> viewModel.sortRuns(SortType.DATE)
-                    1 -> viewModel.sortRuns(SortType.BIKING_TIME)
-                    2 -> viewModel.sortRuns(SortType.DISTANCE)
-                    3 -> viewModel.sortRuns(SortType.AVG_SPEED)
-                    4 -> viewModel.sortRuns(SortType.CALORIES_BURNED)
+                    0 -> viewModel.sortRides(SortType.DATE)
+                    1 -> viewModel.sortRides(SortType.BIKING_TIME)
+                    2 -> viewModel.sortRides(SortType.DISTANCE)
+                    3 -> viewModel.sortRides(SortType.AVG_SPEED)
+                    4 -> viewModel.sortRides(SortType.CALORIES_BURNED)
                 }
             }
         }
     }
 
-    private fun setupRecyclerView() = rvRuns.apply {
+    private fun setupRecyclerView() = rvRides.apply {
         adapter = rideAdapter
         layoutManager = LinearLayoutManager(activity)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this)
@@ -119,12 +119,12 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.layoutPosition
-            val run = rideAdapter.differ.currentList[position]
+            val ride = rideAdapter.differ.currentList[position]
 
-            viewModel.deleteRun(run)
-            Snackbar.make(requireView(), "Successfully deleted run", Snackbar.LENGTH_LONG).apply {
+            viewModel.deleteRide(ride)
+            Snackbar.make(requireView(), "Successfully deleted ride", Snackbar.LENGTH_LONG).apply {
                 setAction("Undo") {
-                    viewModel.insertRun(run)
+                    viewModel.insertRide(ride)
                 }
                 show()
             }

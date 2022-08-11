@@ -176,7 +176,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
                 // post the new lapTime
                 rideTimeElapsedInMillis.postValue(totalRideTimeElapsedInMillis + lapTimeInMillis)
 
-                // if a new round whole second is reached, we want to update timeRunInSeconds
+                // if a new whole second is reached, we want to update the notification (its accurate to whole seconds).
                 // This is to update the notification every second
                 if (rideTimeElapsedInMillis.value!! >= lastWholeSecondInMillis + 1000L) {
                     rideTimeElapsedWholeSecondsInMillis.postValue(rideTimeElapsedWholeSecondsInMillis.value!! + 1)
@@ -230,7 +230,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
 
         // collect updates for notification
         rideTimeElapsedWholeSecondsInMillis.observe(this) { rideTimeInSeconds ->
-            if(!isServiceKilled) {
+            if(!isServiceKilled) { // prevents adding a notification action if the service is killed
                 val notification = curNotification
                     .setContentText(TrackingUtility.getFormattedStopWatchTime(rideTimeInSeconds * 1000L))
 
@@ -272,7 +272,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
             set(curNotification, ArrayList<NotificationCompat.Action>())
         }
 
-        if(!isServiceKilled) {
+        if(!isServiceKilled) {  // prevents adding a notification action if the service is killed
             curNotification = baseNotificationBuilder
                 .addAction(
                     R.drawable.ic_pause_black_24dp,  // where is this shown?

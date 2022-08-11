@@ -1,6 +1,5 @@
 package com.realityexpander.bikingapp.ui.fragments
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -102,9 +101,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
         // restore dialog instance (if needed) after configuration change
         if(savedInstanceState != null) {
-            val cancelRunDialog =
-                parentFragmentManager.findFragmentByTag(CANCEL_DIALOG_TAG) as CancelRunDialog?
-            cancelRunDialog?.setYesListener {
+            val cancelRideDialog =
+                parentFragmentManager.findFragmentByTag(CANCEL_DIALOG_TAG) as CancelRideDialog?
+            cancelRideDialog?.setYesListener {
                 stopRide()
             }
         }
@@ -159,7 +158,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
                     menu.getItem(0)?.isVisible = true // cancel tracking
                 }
             }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED) // only show menu when resumed
 
     }
 
@@ -233,7 +232,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         }
     }
 
-    @SuppressLint("MissingPermission")
     private fun toggleRideActive() {
         if (isTracking) {
             menu?.getItem(0)?.isVisible = true
@@ -310,7 +308,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
                     val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
                     val ride =
                         Ride(bmp, timestamp, avgSpeed, distanceInMeters, curElapsedRideTimeInMillis, caloriesBurned)
-                    viewModel.insertRun(ride)
+
+                    // Add Ride to database
+                    viewModel.insertRide(ride)
 
                     Snackbar.make(
                         requireActivity().findViewById(R.id.rootView),
@@ -340,7 +340,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     }
 
     private fun showCancelTrackingDialog() {
-        CancelRunDialog().apply {
+        CancelRideDialog().apply {
             setYesListener {
                 stopRide()
             }

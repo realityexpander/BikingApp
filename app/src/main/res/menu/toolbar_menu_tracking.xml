@@ -5,7 +5,7 @@
     <item
         android:id="@+id/miCancelTracking"
         android:icon="@drawable/ic_close_white"
-        android:title="Cancel Run"
+        android:title="Cancel Ride"
         android:visible="false"
         app:showAsAction="always" />
 

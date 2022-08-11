@@ -7,25 +7,25 @@ import androidx.room.*
 interface RideDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRun(ride: Ride)
+    suspend fun insertRide(ride: Ride)
 
     @Delete
-    suspend fun deleteRun(ride: Ride)
+    suspend fun deleteRide(ride: Ride)
 
     @Query("SELECT * FROM ride_table ORDER BY timestamp DESC")
-    fun getAllRunsSortedByDate(): LiveData<List<Ride>>
+    fun getAllRidesSortedByDate(): LiveData<List<Ride>>
 
     @Query("SELECT * FROM ride_table ORDER BY timeInMillis DESC")
-    fun getAllRunsSortedByTimeInMillis(): LiveData<List<Ride>>
+    fun getAllRidesSortedByTimeInMillis(): LiveData<List<Ride>>
 
     @Query("SELECT * FROM ride_table ORDER BY caloriesBurned DESC")
-    fun getAllRunsSortedByCaloriesBurned(): LiveData<List<Ride>>
+    fun getAllRidesSortedByCaloriesBurned(): LiveData<List<Ride>>
 
     @Query("SELECT * FROM ride_table ORDER BY distanceInMeters DESC")
-    fun getAllRunsSortedByDistance(): LiveData<List<Ride>>
+    fun getAllRidesSortedByDistance(): LiveData<List<Ride>>
 
     @Query("SELECT * FROM ride_table ORDER BY avgSpeedInKMH DESC")
-    fun getAllRunsSortedByAvgSpeed(): LiveData<List<Ride>>
+    fun getAllRidesSortedByAvgSpeed(): LiveData<List<Ride>>
 
     @Query("SELECT SUM(timeInMillis) FROM ride_table")
     fun getTotalTimeInMillis(): LiveData<Long>

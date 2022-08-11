@@ -85,10 +85,10 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             }
         })
 
-        viewModel.runsSortedByDate.observe(viewLifecycleOwner, Observer { runs ->
-            runs?.let { runs ->
-                val allAvgSpeeds = runs.indices.map { i ->
-                    BarEntry(i.toFloat(), runs[i].avgSpeedInKMH)
+        viewModel.ridesSortedByDate.observe(viewLifecycleOwner, Observer { rides ->
+            rides?.let { rides ->
+                val allAvgSpeeds = rides.indices.map { i ->
+                    BarEntry(i.toFloat(), rides[i].avgSpeedInKMH)
                 }
 
                 val bardataSet = BarDataSet(allAvgSpeeds, "Avg Speed over Time")
@@ -99,7 +99,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                 val lineData = BarData(bardataSet)
                 barChart.data = lineData
                 val marker = CustomMarkerView(
-                    runs.reversed(),
+                    rides.reversed(),
                     requireContext(),
                     R.layout.marker_view
                 )

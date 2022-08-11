@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_ride.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RideAdapter : RecyclerView.Adapter<RideAdapter.RunViewHolder>() {
+class RideAdapter : RecyclerView.Adapter<RideAdapter.RideViewHolder>() {
 
     private val diffCallback = object : DiffUtil.ItemCallback<Ride>() {
         override fun areItemsTheSame(oldItem: Ride, newItem: Ride): Boolean {
@@ -29,12 +29,12 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RunViewHolder>() {
     // ListDiffer to efficiently deal with changes in the RecyclerView
     val differ = AsyncListDiffer(this, diffCallback)
 
-    inner class RunViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class RideViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     fun submitList(list: List<Ride>) = differ.submitList(list)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RunViewHolder {
-        return RunViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RideViewHolder {
+        return RideViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_ride,
                 parent,
@@ -47,26 +47,26 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RunViewHolder>() {
         return differ.currentList.size
     }
 
-    override fun onBindViewHolder(holder: RunViewHolder, position: Int) {
-        val run = differ.currentList[position]
+    override fun onBindViewHolder(holder: RideViewHolder, position: Int) {
+        val ride = differ.currentList[position]
         // set item data
         holder.itemView.apply {
-            Glide.with(this).load(run.img).into(ivRunImage)
+            Glide.with(this).load(ride.img).into(ivRideImage)
 
             val calendar = Calendar.getInstance().apply {
-                timeInMillis = run.timestamp
+                timeInMillis = ride.timestamp
             }
             val dateFormat = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
             tvDate.text = dateFormat.format(calendar.time)
 
-            "${"%.2f".format(run.avgSpeedInKMH * 0.621371)} mp/h".also {
+            "${"%.2f".format(ride.avgSpeedInKMH * 0.621371)} mp/h".also {
                 tvAvgSpeed.text = it
             }
-            "${"%.2f".format(run.distanceInMeters / 1000f * 0.621371)} mi".also {
+            "${"%.2f".format(ride.distanceInMeters / 1000f * 0.621371)} mi".also {
                 tvDistance.text = it
             }
-            tvTime.text = TrackingUtility.getFormattedStopWatchTime(run.timeInMillis)
-            "${run.caloriesBurned} kcal".also {
+            tvTime.text = TrackingUtility.getFormattedStopWatchTime(ride.timeInMillis)
+            "${ride.caloriesBurned} kcal".also {
                 tvCalories.text = it
             }
         }

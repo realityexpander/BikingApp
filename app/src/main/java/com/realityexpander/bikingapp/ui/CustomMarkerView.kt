@@ -29,28 +29,28 @@ class CustomMarkerView(
         if(e == null) {
             return
         }
-        val curRunId = e.x.toInt()
-        val run = rides[curRunId]
+        val curRideId = e.x.toInt()
+        val ride = rides[curRideId]
         val calendar = Calendar.getInstance().apply {
-            timeInMillis = run.timestamp
+            timeInMillis = ride.timestamp
         }
         val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
         tvDate.text = dateFormat.format(calendar.time)
 
-        "${run.avgSpeedInKMH}km/h".also {
+        "${ride.avgSpeedInKMH}km/h".also {
             tvAvgSpeed.text = it
         }
 
-        "${run.distanceInMeters / 1000f}km".also {
+        "${ride.distanceInMeters / 1000f}km".also {
             tvDistance.text = it
         }
 
         tvDuration.text =
             TrackingUtility.getFormattedStopWatchTime(
-                run.timeInMillis
+                ride.timeInMillis
             )
 
-        "${run.caloriesBurned}kcal".also {
+        "${ride.caloriesBurned}kcal".also {
             tvCaloriesBurned.text = it
         }
     }

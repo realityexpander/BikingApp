@@ -7,19 +7,19 @@ import javax.inject.Inject
 class MainRepository @Inject constructor(
     val rideDao: RideDao
 ) {
-    suspend fun insertRun(ride: Ride) = rideDao.insertRun(ride)
+    suspend fun insertRide(ride: Ride) = rideDao.insertRide(ride)
 
-    suspend fun deleteRun(ride: Ride) = rideDao.deleteRun(ride)
+    suspend fun deleteRide(ride: Ride) = rideDao.deleteRide(ride)
 
-    fun getAllRunsSortedByDate() = rideDao.getAllRunsSortedByDate()
+    fun getAllRidesSortedByDate() = rideDao.getAllRidesSortedByDate()
 
-    fun getAllRunsSortedByTimeInMillis() = rideDao.getAllRunsSortedByTimeInMillis()
+    fun getAllRidesSortedByTimeInMillis() = rideDao.getAllRidesSortedByTimeInMillis()
 
-    fun getAllRunsSortedByDistance() = rideDao.getAllRunsSortedByDistance()
+    fun getAllRidesSortedByDistance() = rideDao.getAllRidesSortedByDistance()
 
-    fun getAllRunsSortedByCaloriesBurned() = rideDao.getAllRunsSortedByCaloriesBurned()
+    fun getAllRidesSortedByCaloriesBurned() = rideDao.getAllRidesSortedByCaloriesBurned()
 
-    fun getAllRunsSortedByAvgSpeed() = rideDao.getAllRunsSortedByAvgSpeed()
+    fun getAllRidesSortedByAvgSpeed() = rideDao.getAllRidesSortedByAvgSpeed()
 
     fun getTotalDistance() = rideDao.getTotalDistance()
 
