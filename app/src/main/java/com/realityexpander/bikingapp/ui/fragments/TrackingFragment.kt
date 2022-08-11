@@ -111,7 +111,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         }
 
         btnToggleRideActive.setOnClickListener {
-            // Delayed to allow the UI to update for click effect
+            // Delayed to allow the UI to update for click highlight effect
             Handler(Looper.getMainLooper()).postDelayed({
                 toggleRideActive()
             }, 150)
