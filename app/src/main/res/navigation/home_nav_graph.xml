@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
     app:startDestination="@id/setupFragment">
 
     <fragment
-        android:id="@+id/runFragment2"
+        android:id="@+id/rideFragment"
         android:name="com.realityexpander.bikingapp.ui.fragments.RideFragment"
-        android:label="RunFragment" >
+        tools:layout="@layout/fragment_ride"
+        android:label="RideFragment">
         <action
             android:id="@+id/action_runFragment2_to_trackingFragment"
             app:destination="@id/trackingFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
+        tools:layout="@layout/fragment_settings"
         android:name="com.realityexpander.bikingapp.ui.fragments.SettingsFragment"
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/statisticsFragment"
+        tools:layout="@layout/fragment_statistics"
         android:name="com.realityexpander.bikingapp.ui.fragments.StatisticsFragment"
         android:label="StatisticsFragment" />
     <fragment
         android:id="@+id/setupFragment"
+        tools:layout="@layout/fragment_setup"
         android:name="com.realityexpander.bikingapp.ui.fragments.SetupFragment"
         android:label="SetupFragment" >
         <action
             android:id="@+id/action_setupFragment_to_rideFragment"
-            app:destination="@id/runFragment2" />
+            app:destination="@id/rideFragment" />
     </fragment>
     <fragment
         android:id="@+id/trackingFragment"
+        tools:layout="@layout/fragment_tracking"
         android:name="com.realityexpander.bikingapp.ui.fragments.TrackingFragment"
         android:label="TrackingFragment" >
         <action
             android:id="@+id/action_trackingFragment_to_rideFragment2"
-            app:destination="@id/runFragment2" />
+            app:destination="@id/rideFragment" />
     </fragment>
 
     <action android:id="@+id/action_global_trackingFragment"
