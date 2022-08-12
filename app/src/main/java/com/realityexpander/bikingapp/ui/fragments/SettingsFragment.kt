@@ -38,7 +38,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun loadFieldsFromSharedPref() {
         val name = sharedPref.getString(KEY_NAME, "") ?: ""
-        val weight = sharedPref.getFloat(KEY_WEIGHT, 80f) / 0.45359236f // convert to lb
+        val weight = sharedPref.getFloat(KEY_WEIGHT, 80f) / 0.45359236f // convert to lbs
 
         etName.setText(name)
         etWeight.setText(weight.toString())
