@@ -18,7 +18,7 @@ import com.realityexpander.bikingapp.adapters.RideAdapter
 import com.realityexpander.bikingapp.common.Constants.Companion.REQUEST_CODE_LOCATION_PERMISSION
 import com.realityexpander.bikingapp.common.SortType
 import com.realityexpander.bikingapp.common.TrackingUtility
-import com.realityexpander.bikingapp.ui.RideViewModel
+import com.realityexpander.bikingapp.ui.viewmodels.RideViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.realityexpander.bikingapp.common.Constants
 import dagger.hilt.android.AndroidEntryPoint

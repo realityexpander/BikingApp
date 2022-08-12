@@ -28,9 +28,10 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // If first time, navigate to the home screen
         if (!isFirstTimeAppOpen) {
             val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.setupFragment, true) // clears the back stack
+                .setPopUpTo(R.id.setupFragment, true) // clears the setupFragment from the back stack
                 .build()
 
             findNavController().navigate(

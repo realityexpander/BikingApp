@@ -34,7 +34,7 @@ import com.realityexpander.bikingapp.common.Constants.Companion.POLYLINE_COLOR
 import com.realityexpander.bikingapp.common.Constants.Companion.POLYLINE_WIDTH
 import com.realityexpander.bikingapp.common.TrackingUtility
 import com.realityexpander.bikingapp.services.TrackingService
-import com.realityexpander.bikingapp.ui.RideViewModel
+import com.realityexpander.bikingapp.ui.viewmodels.RideViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tracking.*
 import timber.log.Timber

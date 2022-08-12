@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.ui.CustomMarkerView
 import com.realityexpander.bikingapp.common.TrackingUtility
-import com.realityexpander.bikingapp.ui.StatisticsViewModel
+import com.realityexpander.bikingapp.ui.viewmodels.StatisticsViewModel
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import dagger.hilt.android.AndroidEntryPoint

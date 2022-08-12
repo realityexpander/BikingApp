@@ -1,4 +1,4 @@
-package com.realityexpander.bikingapp.ui
+package com.realityexpander.bikingapp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.realityexpander.bikingapp.repositories.RideRepository

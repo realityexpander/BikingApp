@@ -1,4 +1,4 @@
-package com.realityexpander.bikingapp.ui
+package com.realityexpander.bikingapp.ui.viewmodels
 
 import android.content.SharedPreferences
 import androidx.lifecycle.*
