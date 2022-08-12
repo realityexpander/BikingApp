@@ -51,14 +51,14 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     private var timeLapStartedInMillis = 0L // the time when we last started the timer
     private var lastWholeSecondInMillis = 0L
 
-    // These are exposed outside the service
+    // These are exposed outside the service, so we keep them in an object
     companion object {
         val rideTimeElapsedInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
         val pathSegments = MutableLiveData<SegmentsOfPolyLatLngLines>()
     }
 
-    // Base notification builder that contains the settings every notification will have
+    // Base notification builder that contains the default settings every notification will have
     @Inject
     lateinit var baseNotificationBuilder: NotificationCompat.Builder
 
