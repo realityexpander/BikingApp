@@ -102,19 +102,26 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
         viewModel.ridesSortedByDate.observe(viewLifecycleOwner, Observer { rides ->
             rides?.let { rides ->
+
+                // Fill the bar chart with data
                 val allAvgSpeeds = rides.indices.map { i ->
                     BarEntry(i.toFloat(), (rides[i].avgSpeedInKMH * 0.621371).toFloat())
                 }
 
                 val bardataSettings = BarDataSet(allAvgSpeeds, "Avg MPH")
+
+                // Set the color & text of the bars in the chart
                 bardataSettings.apply {
                     valueTextColor = Color.WHITE
                     color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
                     valueTextSize = 16f
                 }
 
+                // Set the data to the chart
                 val lineData = BarData(bardataSettings)
                 barChart.data = lineData
+
+                // Create the pop-up custom marker view for the chart
                 val marker = CustomMarkerView(
                     rides,
                     requireContext(),

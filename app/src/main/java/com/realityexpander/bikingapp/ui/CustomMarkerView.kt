@@ -31,8 +31,8 @@ class CustomMarkerView(
             return
         }
 
-        val curRideId = e.x.toInt()
-        val ride = rides[curRideId]
+        val curRideIndex = e.x.toInt()  // pick the bar that was clicked
+        val ride = rides[curRideIndex]
         val calendar = Calendar.getInstance().apply {
             timeInMillis = ride.timestamp
         }
