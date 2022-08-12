@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.location.Location
@@ -152,7 +151,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
             super.onLocationResult(result)
 
             if(isTracking.value!!) {
-                result?.locations?.let { locations ->
+                result.locations.let { locations ->
                     for(location in locations) {
                         addPathPointToLastPathSegment(location)
                     }
