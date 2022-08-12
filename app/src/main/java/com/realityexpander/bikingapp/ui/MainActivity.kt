@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)  // Show our toolbar
         bottomNavigationView.setupWithNavController(navHostFragment.findNavController()) // use the nav controller to setup the bottom nav view
-        bottomNavigationView.setOnNavigationItemReselectedListener { /* NO-OP */ }
 
         navigateToTrackingFragmentIfNeeded(intent)  // If the activity was destroyed and relaunched, and we need to navigate to the tracking fragment
 
