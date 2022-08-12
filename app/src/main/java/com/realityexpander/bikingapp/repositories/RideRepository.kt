@@ -4,7 +4,7 @@ import com.realityexpander.bikingapp.db.Ride
 import com.realityexpander.bikingapp.db.RideDao
 import javax.inject.Inject
 
-class MainRepository @Inject constructor(
+class RideRepository @Inject constructor(
     val rideDao: RideDao
 ) {
     suspend fun insertRide(ride: Ride) = rideDao.insertRide(ride)

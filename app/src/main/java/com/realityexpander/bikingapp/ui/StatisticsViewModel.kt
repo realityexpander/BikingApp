@@ -1,19 +1,19 @@
 package com.realityexpander.bikingapp.ui
 
 import androidx.lifecycle.ViewModel
-import com.realityexpander.bikingapp.repositories.MainRepository
+import com.realityexpander.bikingapp.repositories.RideRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
-    mainRepository: MainRepository
+    rideRepository: RideRepository
 ) : ViewModel() {
 
-    var totalDistance = mainRepository.getTotalDistance()
-    var totalTimeInMillis = mainRepository.getTotalTimeInMillis()
-    var totalAvgSpeed = mainRepository.getTotalAvgSpeed()
-    var totalCaloriesBurned = mainRepository.getTotalCaloriesBurned()
+    var totalDistance = rideRepository.getTotalDistance()
+    var totalTimeInMillis = rideRepository.getTotalTimeInMillis()
+    var totalAvgSpeed = rideRepository.getTotalAvgSpeed()
+    var totalCaloriesBurned = rideRepository.getTotalCaloriesBurned()
 
-    var ridesSortedByDate = mainRepository.getAllRidesSortedByDate()
+    var ridesSortedByDate = rideRepository.getAllRidesSortedByDate()
 }

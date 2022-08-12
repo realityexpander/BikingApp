@@ -10,6 +10,7 @@ import com.realityexpander.bikingapp.common.Constants.Companion.DATABASE_NAME
 import com.realityexpander.bikingapp.common.Constants.Companion.KEY_FIRST_TIME_TOGGLE
 import com.realityexpander.bikingapp.common.Constants.Companion.KEY_HEIGHT
 import com.realityexpander.bikingapp.common.Constants.Companion.KEY_NAME
+import com.realityexpander.bikingapp.common.Constants.Companion.KEY_SORT_TYPE
 import com.realityexpander.bikingapp.common.Constants.Companion.KEY_WEIGHT
 import com.realityexpander.bikingapp.common.Constants.Companion.SHARED_PREFERENCES_NAME
 import dagger.Module
@@ -83,6 +84,12 @@ object AppModule {
     @Provides
     @Named("String2")
     fun provideTestString2() = "This is a string 2 we will inject"
+
+    @Singleton
+    @Provides
+    @Named("sortTypePref")
+    fun provideSortType(sharedPreferences: SharedPreferences) =
+        sharedPreferences.getInt(KEY_SORT_TYPE, 0)
 
     @Singleton
     @Provides

@@ -34,7 +34,7 @@ import com.realityexpander.bikingapp.common.Constants.Companion.POLYLINE_COLOR
 import com.realityexpander.bikingapp.common.Constants.Companion.POLYLINE_WIDTH
 import com.realityexpander.bikingapp.common.TrackingUtility
 import com.realityexpander.bikingapp.services.TrackingService
-import com.realityexpander.bikingapp.ui.MainViewModel
+import com.realityexpander.bikingapp.ui.RideViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tracking.*
 import timber.log.Timber
@@ -81,7 +81,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     private var curElapsedRideTimeInMillis = 0L
     private var pathSegments = mutableListOf<PolyLineOfLatLngs>()
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: RideViewModel by viewModels()
 
     private var menu: Menu? = null
 
