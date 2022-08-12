@@ -89,7 +89,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
         viewModel.totalCaloriesBurned.observe(viewLifecycleOwner, Observer {
             it?.let {
-                val totalCaloriesBurned = "${it}kcal"
+                val totalCaloriesBurned = "$it kcal"
                 tvTotalCalories.text = totalCaloriesBurned
             }
         })
