@@ -169,7 +169,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
 
         CoroutineScope(Dispatchers.Main).launch {
             while (isTracking.value!!) {
-                // time difference between now and time last started/continued
+                // Difference between now and last time timer was started/continued
                 lapTimeInMillis = System.currentTimeMillis() - timeLapStartedInMillis
 
                 // post the new lapTime
