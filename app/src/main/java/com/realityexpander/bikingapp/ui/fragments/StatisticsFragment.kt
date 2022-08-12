@@ -24,6 +24,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupLineChart()
         subscribeToObservers()
     }
