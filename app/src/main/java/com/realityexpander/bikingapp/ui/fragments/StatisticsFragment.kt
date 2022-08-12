@@ -1,6 +1,7 @@
 package com.realityexpander.bikingapp.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -12,6 +13,7 @@ import com.realityexpander.bikingapp.ui.CustomMarkerView
 import com.realityexpander.bikingapp.common.TrackingUtility
 import com.realityexpander.bikingapp.ui.viewmodels.StatisticsViewModel
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_statistics.*
@@ -25,14 +27,14 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupLineChart()
+        setupBarChart()
         subscribeToObservers()
     }
 
-    private fun setupLineChart() {
+    private fun setupBarChart() {
         barChart.xAxis.apply {
-            position = XAxis.XAxisPosition.BOTTOM
             setDrawLabels(false)
+            position = XAxis.XAxisPosition.BOTTOM
             axisLineColor = Color.WHITE
             textColor = Color.WHITE
             setDrawGridLines(false)
@@ -40,16 +42,22 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         barChart.axisLeft.apply {
             axisLineColor = Color.WHITE
             textColor = Color.WHITE
+            textSize = 12f
             setDrawGridLines(false)
         }
         barChart.axisRight.apply {
             axisLineColor = Color.WHITE
             textColor = Color.WHITE
+            textSize = 12f
             setDrawGridLines(false)
         }
         barChart.apply {
-            description.text = "Avg Speed Over Time"
             legend.isEnabled = false
+            description.text = "Avg Speed Over Time"
+            description.textSize = 16f
+            description.textColor = Color.BLACK
+            description.typeface = Typeface.DEFAULT_BOLD
+            animateX(1500)
         }
     }
 
@@ -92,12 +100,14 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                     BarEntry(i.toFloat(), rides[i].avgSpeedInKMH)
                 }
 
-                val bardataSet = BarDataSet(allAvgSpeeds, "Avg Speed over Time")
-                bardataSet.apply {
+                val bardataSettings = BarDataSet(allAvgSpeeds, "Avg Speed over Time")
+                bardataSettings.apply {
                     valueTextColor = Color.WHITE
                     color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+                    valueTextSize = 16f
                 }
-                val lineData = BarData(bardataSet)
+
+                val lineData = BarData(bardataSettings)
                 barChart.data = lineData
                 val marker = CustomMarkerView(
                     rides.reversed(),

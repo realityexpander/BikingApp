@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintStart_toStartOf="@+id/tvTotalDistance"
         app:layout_constraintTop_toBottomOf="@+id/tvTotalDistance"
-        app:layout_constraintVertical_bias="0.076" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvTotalDistance"
@@ -36,7 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Total Time"
-
         app:layout_constraintBottom_toTopOf="@+id/tvTotalCaloriesInfo"
         app:layout_constraintEnd_toEndOf="@+id/tvTotalTime"
         app:layout_constraintStart_toStartOf="@+id/tvTotalTime"
@@ -47,7 +46,7 @@
         android:id="@+id/tvTotalTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:text="00:00:00"
         android:textColor="@android:color/white"
         android:textSize="34sp"
