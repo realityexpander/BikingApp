@@ -12,6 +12,8 @@ import kotlinx.android.synthetic.main.marker_view.view.*
 import kotlinx.android.synthetic.main.marker_view.view.tvAvgSpeed
 import kotlinx.android.synthetic.main.marker_view.view.tvDate
 import kotlinx.android.synthetic.main.marker_view.view.tvDistance
+import java.lang.Float.max
+import java.lang.Float.min
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -31,8 +33,8 @@ class CustomMarkerView(
             return
         }
 
-        val curRideIndex = e.x.toInt()  // pick the bar that was clicked
-        val ride = rides[curRideIndex]
+        val selectedRideIndex = e.x.toInt()  // pick the bar that was clicked
+        val ride = rides[selectedRideIndex]
         val calendar = Calendar.getInstance().apply {
             timeInMillis = ride.timestamp
         }
@@ -59,6 +61,8 @@ class CustomMarkerView(
     }
 
     override fun getOffset(): MPPointF {
-        return MPPointF(-width / 2f, -height.toFloat())
+        // width and height is the individual the bar element that was highlighted
+
+        return MPPointF(min(-width / 2f, -435f), -height.toFloat())
     }
 }

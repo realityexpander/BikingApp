@@ -101,13 +101,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         mapView.onCreate(mapViewBundle)
 
-        // restore dialog instance (if needed) after configuration change
+        // restore "cancel ride" dialog instance (if needed) after configuration change
         if(savedInstanceState != null) {
-            val cancelRideDialog =
-                parentFragmentManager.findFragmentByTag(CANCEL_DIALOG_TAG) as CancelRideDialog?
-            cancelRideDialog?.setYesListener {
-                stopRide()
-            }
+            setCancelDialogYesListenerToStopRide()
         }
 
         btnToggleRideActive.setOnClickListener {
@@ -223,13 +219,21 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     private fun updateTrackingUI(isTracking: Boolean) {
         this.isTracking = isTracking
 
+        // Not tracking and have already started a ride? -> show continue ride button
         if (!isTracking && curElapsedRideTimeInMillis > 0L) {
             btnToggleRideActive.text = getString(R.string.continue_text)
             btnFinishRide.visibility = View.VISIBLE
-        } else if (isTracking) {
+
+            return
+        }
+
+        // Are tracking? -> show pause ride button
+        if (isTracking) {
             btnToggleRideActive.text = getString(R.string.pause_text)
             menu?.getItem(0)?.isVisible = true
             btnFinishRide.visibility = View.GONE
+
+            return
         }
     }
 
@@ -352,10 +356,18 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
     private fun showCancelTrackingDialog() {
         CancelRideDialog().apply {
-            setYesListener {
-                stopRide()
-            }
+            setCancelDialogYesListenerToStopRide(this)
         }.show(parentFragmentManager, CANCEL_DIALOG_TAG)
+    }
+
+    // Find the cancelRideDialog and set the yesListener to stopRide.
+    private fun setCancelDialogYesListenerToStopRide(
+        cancelRideDialog: CancelRideDialog? =
+            parentFragmentManager.findFragmentByTag(CANCEL_DIALOG_TAG) as CancelRideDialog?
+    ) {
+        cancelRideDialog?.setYesListener{
+            stopRide()
+        }
     }
 
     override fun onResume() {
