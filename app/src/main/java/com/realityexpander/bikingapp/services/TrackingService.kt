@@ -87,7 +87,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
         rideTimeElapsedWholeSecondsInMillis.postValue(0L)
     }
 
-    // Respond to commands
+    // Respond to commands (should be named `onCommandIntentAction` or `onCommandAction`), ugh google...
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             when (it.action) {
