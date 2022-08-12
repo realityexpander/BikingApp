@@ -122,23 +122,15 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         if (TrackingUtility.hasLocationPermissions(requireContext())) {
             return
         }
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-//            EasyPermissions.requestPermissions(
-//                this,
-//                "You need to accept location permission to use this app",
-//                REQUEST_CODE_LOCATION_PERMISSION,
-//                Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            )
-//        } else {
-            EasyPermissions.requestPermissions(
-                this,
-                "Please accept location permissions to use this app",
-                REQUEST_CODE_LOCATION_PERMISSION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-            )
-//        }
+
+        // Ask for FINE and COARSE location permissions first.
+        EasyPermissions.requestPermissions(
+            this,
+            "Please accept location permissions to use this app",
+            REQUEST_CODE_LOCATION_PERMISSION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        )
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -155,8 +147,9 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
 
+        // FOR VERSION_CODE >= Q, we need to request background location permission as well.
         // After accepting the COARSE and FINE location permission,
-        //   must ask for BACKGROUND_LOCATION permission to be enabled.
+        //   we must ask for BACKGROUND_LOCATION permission to be enabled.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if(requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
                 EasyPermissions.requestPermissions(
