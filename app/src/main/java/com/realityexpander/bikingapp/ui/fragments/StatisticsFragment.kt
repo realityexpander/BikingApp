@@ -57,10 +57,10 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         barChart.apply {
             legend.isEnabled = false
             description.isEnabled = true
-            description.text = "Average Speed in MPH"
+            description.text = "Average Speed in mph"
             description.textSize = 16f
             description.textColor = Color.BLACK
-            description.typeface = Typeface.DEFAULT_BOLD
+            description.typeface = Typeface.defaultFromStyle(Typeface.BOLD_ITALIC)
             description.textAlign = Paint.Align.LEFT
             description.setPosition(100f, 885f)
             animateX(1500)

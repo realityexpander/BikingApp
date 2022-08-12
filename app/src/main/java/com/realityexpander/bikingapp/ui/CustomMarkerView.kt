@@ -30,6 +30,7 @@ class CustomMarkerView(
         if(e == null) {
             return
         }
+
         val curRideId = e.x.toInt()
         val ride = rides[curRideId]
         val calendar = Calendar.getInstance().apply {
