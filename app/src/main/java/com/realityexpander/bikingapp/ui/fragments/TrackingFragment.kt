@@ -166,7 +166,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         TrackingService.pathSegments.observe(viewLifecycleOwner, Observer { segments ->
             pathSegments = segments
 
-            // Adding *ALL* segments allows map to be drawn while lockscreen (screen off)
+            // Adding *ALL* segments allows map to be drawn during lockscreen active (screen off)
             addAllPolylinesToMap()
             moveCameraToUserMostRecentLocation()
         })
