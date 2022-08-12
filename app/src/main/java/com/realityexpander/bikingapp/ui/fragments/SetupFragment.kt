@@ -66,7 +66,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
 
         sharedPref.edit()
             .putString(KEY_NAME, name)
-            .putFloat(KEY_WEIGHT, weightText.toFloat())
+            .putFloat(KEY_WEIGHT, weightText.toFloat() * 0.45359236f) // Convert from lbs to kg
             .putBoolean(KEY_FIRST_TIME_TOGGLE, false)
             .apply()
 

@@ -8,6 +8,7 @@ import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.common.Constants.Companion.KEY_NAME
 import com.realityexpander.bikingapp.common.Constants.Companion.KEY_WEIGHT
 import com.google.android.material.snackbar.Snackbar
+import com.realityexpander.bikingapp.common.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -37,7 +38,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun loadFieldsFromSharedPref() {
         val name = sharedPref.getString(KEY_NAME, "") ?: ""
-        val weight = sharedPref.getFloat(KEY_WEIGHT, 80f)
+        val weight = sharedPref.getFloat(KEY_WEIGHT, 80f) / 0.45359236f // convert to lb
 
         etName.setText(name)
         etWeight.setText(weight.toString())
@@ -46,16 +47,21 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun applyChangesToSharedPref(): Boolean {
         val nameText = etName.text.toString()
         val weightText = etWeight.text.toString()
+
         if(nameText.isEmpty() || weightText.isEmpty()) {
             return false
         }
+
         sharedPref.edit()
             .putString(KEY_NAME, nameText)
-            .putFloat(KEY_WEIGHT, weightText.toFloat())
+            .putFloat(KEY_WEIGHT, weightText.toFloat() * 0.45359236f) // Convert from lbs to kg
             .apply()
 
         val toolbarText = "Let's ride, $nameText!"
         requireActivity().tvToolbarTitle.text = toolbarText
+
+        activity?.hideKeyboard(btnApplyChanges.rootView)
+
         return true
     }
 }
