@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tool="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/tvWelcome"
@@ -23,6 +24,8 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:hintTextColor="@android:color/darker_gray"
+        android:textColorHint="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -32,6 +35,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Your Name"
+            tool:text="Chris"
             android:inputType="textPersonName" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -41,6 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        app:hintTextColor="@android:color/darker_gray"
+        android:textColorHint="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="@+id/tilName"
         app:layout_constraintTop_toBottomOf="@+id/tilName">
 
@@ -48,6 +54,7 @@
             android:id="@+id/etWeight"
             android:layout_width="149dp"
             android:layout_height="wrap_content"
+            tool:text="100"
             android:ems="10"
             android:hint="Your Weight"
             android:inputType="numberDecimal" />
@@ -58,8 +65,8 @@
         android:id="@+id/tvWeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="kg"
+        android:layout_marginLeft="8dp"
+        android:text="lbs"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/tilWeight"
         app:layout_constraintLeft_toRightOf="@id/tilWeight"

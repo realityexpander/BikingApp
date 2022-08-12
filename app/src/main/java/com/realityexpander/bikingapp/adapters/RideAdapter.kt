@@ -63,7 +63,7 @@ class RideAdapter : RecyclerView.Adapter<RideAdapter.RideViewHolder>() {
             val dateFormat = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
             tvDate.text = dateFormat.format(calendar.time)
 
-            "${"%.2f".format(ride.avgSpeedInKMH * 0.621371)} mp/h".also {
+            "${"%.2f".format(ride.avgSpeedInKMH * 0.621371)} mph".also {
                 tvAvgSpeed.text = it
             }
 

@@ -37,7 +37,10 @@
 
     <style name="TextViewStyle" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@android:color/white</item>
+    </style>
 
+    <style name="TextInputEditText" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
