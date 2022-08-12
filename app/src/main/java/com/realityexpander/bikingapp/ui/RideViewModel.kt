@@ -23,7 +23,7 @@ class RideViewModel @Inject constructor(
     private val ridesSortedByAvgSpeed = rideRepository.getAllRidesSortedByAvgSpeed()
     private val ridesSortedByCaloriesBurned = rideRepository.getAllRidesSortedByCaloriesBurned()
 
-    val sortType = MutableLiveData(SortType.DATE)
+    private val sortType = MutableLiveData(SortType.DATE)
     val rides: LiveData<List<Ride>> = switchMap(sortType) { sortType ->
         when (sortType) {
             DATE            -> ridesSortedByDate

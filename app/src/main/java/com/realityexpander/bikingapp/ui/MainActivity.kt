@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity() {
             tvToolbarTitle?.text = toolbarTitle
         }
 
+        // listen for navigation events, so we can update the UI appropriately
         navHostFragment.findNavController()
-            // listen for navigation events, so we can update the UI appropriately
             .addOnDestinationChangedListener { _, destination, _ ->
                 when (destination.id) {
                     R.id.setupFragment, R.id.trackingFragment ->
@@ -44,9 +44,7 @@ class MainActivity : AppCompatActivity() {
                         bottomNavigationView.visibility = View.VISIBLE
                 }
             }
-
     }
-
 
     // Checks if we launched the activity from the notification, and if so, navigate to the tracking fragment
     override fun onNewIntent(intent: Intent?) {

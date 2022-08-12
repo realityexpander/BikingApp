@@ -34,13 +34,11 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
 
     private val viewModel: RideViewModel by viewModels()
 
-//    @JvmField
-//    @field:[Inject Named("sortTypePref")]
-//    var sortTypePrefOrdinal: Int = 0  // load from sharedPrefs
     var sortTypePref: SortType = SortType.DATE
-        set(value) {
-            field = value
-            viewModel.sortRides(value)
+        set(sortType) {
+            field = sortType
+            viewModel.sortRides(sortType)
+            writeSortTypeToSharedPref(sortType)
         }
 
     @Inject
@@ -52,29 +50,19 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         requestPermissions()
 
         // Load sort type from sharedPrefs
-//        sortTypePrefOrdinal = getSortTypeOrdinalFromSharedPref()
         sortTypePref = getSortTypeFromSharedPref()
 
+        // Start new tracking
         fab.setOnClickListener {
             findNavController().navigate(R.id.action_rideFragment_to_trackingFragment)
         }
 
         // Setup the current sort type selection for spinner
-//        when (viewModel.sortType) {
-//            SortType.DATE -> spSortType.setSelection(0)
-//            SortType.BIKING_TIME -> spSortType.setSelection(1)
-//            SortType.DISTANCE -> spSortType.setSelection(2)
-//            SortType.AVG_SPEED -> spSortType.setSelection(3)
-//            SortType.CALORIES_BURNED -> spSortType.setSelection(4)
-//        }
-//        spSortType.setSelection(sortTypePrefOrdinal)
         spSortType.setSelection(sortTypePref.ordinal)
 
         // Setup the sort type spinner selection listener
         spSortType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(adapterView: AdapterView<*>?) {
-                // Do nothing
-            }
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
 
             override fun onItemSelected(
                 adapterView: AdapterView<*>?,
@@ -82,18 +70,7 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
                 pos: Int,
                 id: Long
             ) {
-//                when (pos) {
-//                    0 -> viewModel.sortRides(SortType.DATE)
-//                    1 -> viewModel.sortRides(SortType.BIKING_TIME)
-//                    2 -> viewModel.sortRides(SortType.DISTANCE)
-//                    3 -> viewModel.sortRides(SortType.AVG_SPEED)
-//                    4 -> viewModel.sortRides(SortType.CALORIES_BURNED)
-//                }
-//                val sortType = SortType.values()[pos]
-//                viewModel.sortRides(sortType)
-
                 sortTypePref = SortType.values()[pos]
-                writeSortTypeToSharedPref(sortTypePref)
             }
         }
 
@@ -109,30 +86,6 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         adapter = rideAdapter
         layoutManager = LinearLayoutManager(activity)
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this)
-    }
-
-    private fun requestPermissions() {
-        if (TrackingUtility.hasLocationPermissions(requireContext())) {
-            return
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            EasyPermissions.requestPermissions(
-                this,
-                "You need to accept location permission to use this app",
-                REQUEST_CODE_LOCATION_PERMISSION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        } else {
-            EasyPermissions.requestPermissions(
-                this,
-                "You need to accept location permissions to use this app",
-                REQUEST_CODE_LOCATION_PERMISSION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            )
-        }
     }
 
     // Handle swipe-to-delete
@@ -161,6 +114,33 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         }
     }
 
+    //////////////////////////////////////////
+    ///// EasyPermissions                /////
+
+    private fun requestPermissions() {
+        if (TrackingUtility.hasLocationPermissions(requireContext())) {
+            return
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            EasyPermissions.requestPermissions(
+                this,
+                "You need to accept location permission to use this app",
+                REQUEST_CODE_LOCATION_PERMISSION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        } else {
+            EasyPermissions.requestPermissions(
+                this,
+                "You need to accept location permissions to use this app",
+                REQUEST_CODE_LOCATION_PERMISSION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
+        }
+    }
+
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         // If permissions are denied, allow user to choose to go to app settings to manually grant permissions.
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
@@ -172,9 +152,6 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
             requestPermissions()
         }
     }
-
-    //////////////////////////////////////////
-    ///// Callbacks from EasyPermissions /////
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
 
@@ -192,23 +169,12 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
     //////////////////////////////////////
     // Shared Preferences ////////////////
 
-//    private fun writeSortTypeOrdinalToSharedPref(type: SortType) {
-//        sharedPref
-//            .edit()
-//            .putInt(Constants.KEY_SORT_TYPE, type.ordinal)
-//            .apply()
-//    }
-
     private fun writeSortTypeToSharedPref(type: SortType) {
         sharedPref
             .edit()
             .putInt(Constants.KEY_SORT_TYPE, type.ordinal)
             .apply()
     }
-
-//    private fun getSortTypeOrdinalFromSharedPref(): Int {
-//        return sharedPref.getInt(Constants.KEY_SORT_TYPE, 0)
-//    }
 
     private fun getSortTypeFromSharedPref(): SortType {
         return SortType.values()[sharedPref.getInt(Constants.KEY_SORT_TYPE, 0)]
