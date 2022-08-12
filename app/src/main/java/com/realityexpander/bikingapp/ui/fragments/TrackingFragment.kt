@@ -75,6 +75,8 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     @Named("String1")
     lateinit var string1: String
 
+
+
     private var map: GoogleMap? = null
 
     private var isTracking = false
@@ -141,7 +143,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
                 return when (menuItem.itemId) {
                     R.id.miCancelTracking -> {
                         showCancelTrackingDialog()
@@ -300,6 +301,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
                 getScreenShotFromView(mapView, activity!!) { bmp2 ->
 
+                    // Collect the data for the ride
                     var distanceInMeters = 0
                     for (polyline in pathSegments) {
                         distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
@@ -386,6 +388,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
             val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
             val locationOfViewInWindow = IntArray(2)
             view.getLocationInWindow(locationOfViewInWindow)
+
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     PixelCopy.request(
@@ -403,7 +406,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
                             }
                             // possible to handle other result codes ...
                         },
-                        Handler()
+                        Handler(Looper.getMainLooper())
                     )
                 }
             } catch (e: IllegalArgumentException) {

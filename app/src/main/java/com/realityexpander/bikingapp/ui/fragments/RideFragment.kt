@@ -173,7 +173,7 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         sharedPref
             .edit()
             .putInt(Constants.KEY_SORT_TYPE, type.ordinal)
-            .apply()
+            .apply() // .commit() is synchronous, .apply() is asynchronous
     }
 
     private fun getSortTypeFromSharedPref(): SortType {
