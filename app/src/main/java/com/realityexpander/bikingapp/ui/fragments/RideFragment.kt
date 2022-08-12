@@ -122,24 +122,23 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         if (TrackingUtility.hasLocationPermissions(requireContext())) {
             return
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+//            EasyPermissions.requestPermissions(
+//                this,
+//                "You need to accept location permission to use this app",
+//                REQUEST_CODE_LOCATION_PERMISSION,
+//                Manifest.permission.ACCESS_FINE_LOCATION,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            )
+//        } else {
             EasyPermissions.requestPermissions(
                 this,
-                "You need to accept location permission to use this app",
-                REQUEST_CODE_LOCATION_PERMISSION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        } else {
-            EasyPermissions.requestPermissions(
-                this,
-                "You need to accept location permissions to use this app",
+                "Please accept location permissions to use this app",
                 REQUEST_CODE_LOCATION_PERMISSION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                //Manifest.permission.ACCESS_BACKGROUND_LOCATION  // must be asked after ACCESS_FINE_LOCATION & ACCESS_COARSE_LOCATION
             )
-        }
+//        }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -157,7 +156,7 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
 
         // After accepting the COARSE and FINE location permission,
-        //   ask for BACKGROUND_LOCATION permission is enabled.
+        //   must ask for BACKGROUND_LOCATION permission to be enabled.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if(requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
                 EasyPermissions.requestPermissions(
