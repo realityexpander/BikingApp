@@ -17,19 +17,13 @@ class RideViewModel @Inject constructor(
     val rideRepository: RideRepository,   // Hilt automatically finds this dependency (rideDao)
 ) : ViewModel() {
 
-    @JvmField
-    @field:[Inject Named("sortTypePref")]
-    var sortTypePref: Int = 0
-
     private val ridesSortedByDate = rideRepository.getAllRidesSortedByDate()
     private val ridesSortedByDistance = rideRepository.getAllRidesSortedByDistance()
     private val ridesSortedByTimeInMillis = rideRepository.getAllRidesSortedByTimeInMillis()
     private val ridesSortedByAvgSpeed = rideRepository.getAllRidesSortedByAvgSpeed()
     private val ridesSortedByCaloriesBurned = rideRepository.getAllRidesSortedByCaloriesBurned()
 
-//    val sortType = MutableLiveData(SortType.DATE)
-//    var sortTypePref: Int = SortType.DATE.ordinal
-    val sortType = MutableLiveData(SortType.values()[sortTypePref])
+    val sortType = MutableLiveData(SortType.DATE)
     val rides: LiveData<List<Ride>> = switchMap(sortType) { sortType ->
         when (sortType) {
             DATE            -> ridesSortedByDate

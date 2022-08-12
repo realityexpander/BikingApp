@@ -87,12 +87,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    @Named("sortTypePref")
-    fun provideSortType(sharedPreferences: SharedPreferences) =
-        sharedPreferences.getInt(KEY_SORT_TYPE, 0)
-
-    @Singleton
-    @Provides
     fun provideFirstTimeToggle(sharedPreferences: SharedPreferences) = sharedPreferences.getBoolean(
         KEY_FIRST_TIME_TOGGLE, true
     )

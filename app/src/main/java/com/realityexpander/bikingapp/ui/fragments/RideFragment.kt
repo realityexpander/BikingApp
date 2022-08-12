@@ -26,7 +26,6 @@ import kotlinx.android.synthetic.main.fragment_ride.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import javax.inject.Inject
-import javax.inject.Named
 
 @AndroidEntryPoint
 class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.PermissionCallbacks {
@@ -35,9 +34,14 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
 
     private val viewModel: RideViewModel by viewModels()
 
-    @JvmField
-    @field:[Inject Named("sortTypePref")]
-    var sortTypePref: Int = 0
+//    @JvmField
+//    @field:[Inject Named("sortTypePref")]
+//    var sortTypePrefOrdinal: Int = 0  // load from sharedPrefs
+    var sortTypePref: SortType = SortType.DATE
+        set(value) {
+            field = value
+            viewModel.sortRides(value)
+        }
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -45,9 +49,11 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //viewModel = (activity as MainActivity).mainViewModel
-
         requestPermissions()
+
+        // Load sort type from sharedPrefs
+//        sortTypePrefOrdinal = getSortTypeOrdinalFromSharedPref()
+        sortTypePref = getSortTypeFromSharedPref()
 
         fab.setOnClickListener {
             findNavController().navigate(R.id.action_rideFragment_to_trackingFragment)
@@ -61,9 +67,8 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
 //            SortType.AVG_SPEED -> spSortType.setSelection(3)
 //            SortType.CALORIES_BURNED -> spSortType.setSelection(4)
 //        }
-        //spSortType.setSelection(viewModel.sortType.value?.ordinal ?: 0)
-        //viewModel.sortTypePref = sortTypePref
-        spSortType.setSelection(sortTypePref)
+//        spSortType.setSelection(sortTypePrefOrdinal)
+        spSortType.setSelection(sortTypePref.ordinal)
 
         // Setup the sort type spinner selection listener
         spSortType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -84,9 +89,11 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
 //                    3 -> viewModel.sortRides(SortType.AVG_SPEED)
 //                    4 -> viewModel.sortRides(SortType.CALORIES_BURNED)
 //                }
-                val sortType = SortType.values()[pos]
-                viewModel.sortRides(sortType)
-                writeSortTypeToSharedPref(sortType)
+//                val sortType = SortType.values()[pos]
+//                viewModel.sortRides(sortType)
+
+                sortTypePref = SortType.values()[pos]
+                writeSortTypeToSharedPref(sortTypePref)
             }
         }
 
@@ -185,10 +192,25 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
     //////////////////////////////////////
     // Shared Preferences ////////////////
 
+//    private fun writeSortTypeOrdinalToSharedPref(type: SortType) {
+//        sharedPref
+//            .edit()
+//            .putInt(Constants.KEY_SORT_TYPE, type.ordinal)
+//            .apply()
+//    }
+
     private fun writeSortTypeToSharedPref(type: SortType) {
         sharedPref
             .edit()
             .putInt(Constants.KEY_SORT_TYPE, type.ordinal)
             .apply()
+    }
+
+//    private fun getSortTypeOrdinalFromSharedPref(): Int {
+//        return sharedPref.getInt(Constants.KEY_SORT_TYPE, 0)
+//    }
+
+    private fun getSortTypeFromSharedPref(): SortType {
+        return SortType.values()[sharedPref.getInt(Constants.KEY_SORT_TYPE, 0)]
     }
 }
