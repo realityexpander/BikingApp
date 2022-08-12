@@ -1,6 +1,7 @@
 package com.realityexpander.bikingapp.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
@@ -8,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.Legend
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.ui.CustomMarkerView
 import com.realityexpander.bikingapp.common.TrackingUtility
@@ -53,10 +56,13 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         }
         barChart.apply {
             legend.isEnabled = false
+            description.isEnabled = true
             description.text = "Average Speed in MPH"
             description.textSize = 16f
             description.textColor = Color.BLACK
             description.typeface = Typeface.DEFAULT_BOLD
+            description.textAlign = Paint.Align.LEFT
+            description.setPosition(100f, 885f)
             animateX(1500)
         }
     }
@@ -110,7 +116,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                 val lineData = BarData(bardataSettings)
                 barChart.data = lineData
                 val marker = CustomMarkerView(
-                    rides, //.reversed(),
+                    rides,
                     requireContext(),
                     R.layout.marker_view
                 )
