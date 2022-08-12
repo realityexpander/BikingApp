@@ -10,6 +10,7 @@ class Constants {
         const val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 
         const val REQUEST_CODE_LOCATION_PERMISSION = 0
+        const val REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION = 1
 
         // Database
         const val DATABASE_NAME = "ride_db"

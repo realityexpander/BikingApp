@@ -21,6 +21,7 @@ import com.realityexpander.bikingapp.common.TrackingUtility
 import com.realityexpander.bikingapp.ui.viewmodels.RideViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.realityexpander.bikingapp.common.Constants
+import com.realityexpander.bikingapp.common.Constants.Companion.REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_ride.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -136,7 +137,7 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
                 REQUEST_CODE_LOCATION_PERMISSION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                //Manifest.permission.ACCESS_BACKGROUND_LOCATION  // must be asked after ACCESS_FINE_LOCATION & ACCESS_COARSE_LOCATION
             )
         }
     }
@@ -153,7 +154,21 @@ class RideFragment : Fragment(R.layout.fragment_ride), EasyPermissions.Permissio
         }
     }
 
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+
+        // After accepting the COARSE and FINE location permission,
+        //   ask for BACKGROUND_LOCATION permission is enabled.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if(requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
+                EasyPermissions.requestPermissions(
+                    this,
+                    "Please accept ALLOW ALL THE TIME location permissions to use this app",
+                    REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION  // must be asked after ACCESS_FINE_LOCATION & ACCESS_COARSE_LOCATION
+                )
+            }
+        }
+    }
 
     // Pass this android system callback to EasyPermissions to handle the result of the permission request.
     override fun onRequestPermissionsResult(

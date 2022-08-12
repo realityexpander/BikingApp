@@ -53,7 +53,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 //    @set:Inject
 //    var weight: Float = 0f
 
-    // DOES NOT WORK WITH Named
+    // @set DOES NOT WORK WITH Named?!?!
 //    @set:[Inject Named("weight")]
 //    var weight: Float = 0f
 
@@ -103,7 +103,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
         // restore "cancel ride" dialog instance (if needed) after configuration change
         if(savedInstanceState != null) {
-            setCancelDialogYesListenerToStopRide()
+            setCancelDialogYesListener()
         }
 
         btnToggleRideActive.setOnClickListener {
@@ -275,6 +275,8 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     // Zoom out until the whole track is visible.
     // Used to set screenshot of MapView for database.
     private fun zoomToWholeTrack() {
+        if(pathSegments.isEmpty() || pathSegments.size < 2) return  // prevent crash if no track is available
+
         val bounds = LatLngBounds.Builder()
         for (polyline in pathSegments) {
             for (point in polyline) {
@@ -284,7 +286,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         val width = mapView.width
         val height = mapView.height
 
-        // Dont use animation, we want to see the whole ride track immediately
+        // Don't use animation, we want to see the whole ride track immediately
         map?.moveCamera(
             CameraUpdateFactory.newLatLngBounds(
                 bounds.build(),
@@ -356,12 +358,12 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
 
     private fun showCancelTrackingDialog() {
         CancelRideDialog().apply {
-            setCancelDialogYesListenerToStopRide(this)
+            setCancelDialogYesListener(this)
         }.show(parentFragmentManager, CANCEL_DIALOG_TAG)
     }
 
     // Find the cancelRideDialog and set the yesListener to stopRide.
-    private fun setCancelDialogYesListenerToStopRide(
+    private fun setCancelDialogYesListener(
         cancelRideDialog: CancelRideDialog? =
             parentFragmentManager.findFragmentByTag(CANCEL_DIALOG_TAG) as CancelRideDialog?
     ) {
