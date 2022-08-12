@@ -29,9 +29,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             val success = applyChangesToSharedPref()
 
             if(success) {
-                Snackbar.make(requireView(), "Saved changes", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), "Saved changes",
+                    Snackbar.LENGTH_SHORT).show()
             } else {
-                Snackbar.make(requireView(), "Please fill out all the fields", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), "Please fill out all the fields",
+                    Snackbar.LENGTH_SHORT).show()
             }
         }
     }

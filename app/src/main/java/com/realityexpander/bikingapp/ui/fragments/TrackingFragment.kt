@@ -275,7 +275,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
     // Zoom out until the whole track is visible.
     // Used to set screenshot of MapView for database.
     private fun zoomToWholeTrack() {
-        if(pathSegments.isEmpty() || pathSegments.size < 2) return  // prevent crash if no track is available
+        if(pathSegments.isEmpty() || pathSegments[0].size < 2) return  // prevent crash if no track is available
 
         val bounds = LatLngBounds.Builder()
         for (polyline in pathSegments) {
