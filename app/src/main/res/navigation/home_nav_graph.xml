@@ -39,7 +39,7 @@
         android:name="com.realityexpander.bikingapp.ui.fragments.TrackingFragment"
         android:label="TrackingFragment" >
         <action
-            android:id="@+id/action_trackingFragment_to_rideFragment2"
+            android:id="@+id/action_trackingFragment_to_rideFragment"
             app:destination="@id/rideFragment" />
     </fragment>
 

@@ -351,7 +351,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         tvTimer.text = "00:00:00.00"
         stopTrackingService()
 
-        findNavController().navigate(R.id.action_trackingFragment_to_rideFragment2)
+        findNavController().navigate(R.id.action_trackingFragment_to_rideFragment)
     }
 
     private fun showCancelTrackingDialog() {
