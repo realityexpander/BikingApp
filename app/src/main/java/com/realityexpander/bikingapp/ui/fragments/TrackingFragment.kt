@@ -125,7 +125,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         }
         subscribeToObservers()
 
-
         // Add menu items without using the Fragment Menu APIs
         // Note how we can tie the MenuProvider to the viewLifecycleOwner
         // and an optional Lifecycle.State (here, RESUMED) to indicate when
@@ -167,7 +166,8 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking), GoogleMap.OnMapLo
         TrackingService.pathSegments.observe(viewLifecycleOwner, Observer { segments ->
             pathSegments = segments
 
-            addLatestPolylineToMap()
+            // Adding *ALL* segments allows map to be drawn while lockscreen (screen off)
+            addAllPolylinesToMap()
             moveCameraToUserMostRecentLocation()
         })
 
