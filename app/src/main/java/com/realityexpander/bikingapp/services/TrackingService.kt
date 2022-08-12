@@ -274,7 +274,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
         if(!isServiceKilled) {  // prevents adding a notification action if the service is killed
             curNotification = baseNotificationBuilder
                 .addAction(
-                    R.drawable.ic_pause_black_24dp,  // where is this shown?
+                    R.drawable.ic_pause_black_24dp,  // where is this ever shown?
                     notificationActionText,
                     pendingIntent
                 )
