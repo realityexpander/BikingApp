@@ -33,6 +33,10 @@ annotation class Weight
 @Retention(AnnotationRetention.BINARY)
 annotation class Height
 
+// Note: The values that are extracted from the sharedPreferences are Singletons, so they are not
+//       updated when the shared preferences are written. If the values need to be updated, they
+//       must not be Singletons. It is better to read the values from the shared preferences where needed.
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
