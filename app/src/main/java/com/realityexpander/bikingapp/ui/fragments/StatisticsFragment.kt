@@ -53,7 +53,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         }
         barChart.apply {
             legend.isEnabled = false
-            description.text = "Avg Speed Over Time"
+            description.text = "Average Speed in MPH"
             description.textSize = 16f
             description.textColor = Color.BLACK
             description.typeface = Typeface.DEFAULT_BOLD
@@ -66,8 +66,8 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             // in case DB is empty it will be null
             it?.let {
                 val km = it / 1000f
-                val totalDistance = round(km * 10) / 10f
-                val totalDistanceString = "${totalDistance}km"
+                val totalDistance = round(km * 10 * 0.621371) / 10f
+                val totalDistanceString = "$totalDistance mi"
                 tvTotalDistance.text = totalDistanceString
             }
         })
@@ -81,8 +81,8 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
         viewModel.totalAvgSpeed.observe(viewLifecycleOwner, Observer {
             it?.let {
-                val roundedAvgSpeed = round(it * 10f) / 10f
-                val totalAvgSpeed = "${roundedAvgSpeed}km/h"
+                val roundedAvgSpeed = round(it * 10f * 0.621371) / 10f
+                val totalAvgSpeed = "$roundedAvgSpeed mph"
                 tvAverageSpeed.text = totalAvgSpeed
             }
         })
@@ -97,10 +97,10 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         viewModel.ridesSortedByDate.observe(viewLifecycleOwner, Observer { rides ->
             rides?.let { rides ->
                 val allAvgSpeeds = rides.indices.map { i ->
-                    BarEntry(i.toFloat(), rides[i].avgSpeedInKMH)
+                    BarEntry(i.toFloat(), (rides[i].avgSpeedInKMH * 0.621371).toFloat())
                 }
 
-                val bardataSettings = BarDataSet(allAvgSpeeds, "Avg Speed over Time")
+                val bardataSettings = BarDataSet(allAvgSpeeds, "Avg MPH")
                 bardataSettings.apply {
                     valueTextColor = Color.WHITE
                     color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
@@ -110,7 +110,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                 val lineData = BarData(bardataSettings)
                 barChart.data = lineData
                 val marker = CustomMarkerView(
-                    rides.reversed(),
+                    rides, //.reversed(),
                     requireContext(),
                     R.layout.marker_view
                 )

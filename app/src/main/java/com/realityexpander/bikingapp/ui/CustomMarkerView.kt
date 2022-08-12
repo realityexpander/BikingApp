@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.marker_view.view.tvDate
 import kotlinx.android.synthetic.main.marker_view.view.tvDistance
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 /**
  * Pop-up window, when we click on a bar in the bar chart
@@ -34,14 +35,15 @@ class CustomMarkerView(
         val calendar = Calendar.getInstance().apply {
             timeInMillis = ride.timestamp
         }
-        val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
+
+        val dateFormat = SimpleDateFormat("MM/dd/yy", Locale.getDefault())
         tvDate.text = dateFormat.format(calendar.time)
 
-        "${ride.avgSpeedInKMH}km/h".also {
+        "${(ride.avgSpeedInKMH * 0.621371 * 100).roundToInt() / 100.0} mph".also {
             tvAvgSpeed.text = it
         }
 
-        "${ride.distanceInMeters / 1000f}km".also {
+        "${((ride.distanceInMeters * 0.621371 * 100).roundToInt() / 100) / 1000f} mi".also {
             tvDistance.text = it
         }
 
@@ -50,7 +52,7 @@ class CustomMarkerView(
                 ride.timeInMillis
             )
 
-        "${ride.caloriesBurned}kcal".also {
+        "${ride.caloriesBurned} kcal".also {
             tvCaloriesBurned.text = it
         }
     }

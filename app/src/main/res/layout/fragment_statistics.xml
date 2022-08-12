@@ -40,13 +40,13 @@
         app:layout_constraintEnd_toEndOf="@+id/tvTotalTime"
         app:layout_constraintStart_toStartOf="@+id/tvTotalTime"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.32" />
+        app:layout_constraintVertical_bias="0.3" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvTotalTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="0dp"
         android:text="00:00:00"
         android:textColor="@android:color/white"
         android:textSize="34sp"
