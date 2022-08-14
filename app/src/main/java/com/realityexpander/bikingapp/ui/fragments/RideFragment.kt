@@ -40,6 +40,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) {
     var sortTypePref: SortType = SortType.DATE
         set(sortType) {
             field = sortType
+
             viewModel.sortRides(sortType)
             writeSortTypeToSharedPref(sortType)
         }
@@ -248,7 +249,6 @@ class RideFragment : Fragment(R.layout.fragment_ride) {
                     val uri = Uri.fromParts("package", requireContext().packageName, null)
                     intent.data = uri
                     startActivity(intent)
-
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
