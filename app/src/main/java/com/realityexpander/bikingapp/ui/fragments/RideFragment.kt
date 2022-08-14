@@ -71,7 +71,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) {
                 adapterView: AdapterView<*>?,
                 view: View?,
                 pos: Int,
-                id: Long
+                id: Long,
             ) {
                 sortTypePref = SortType.values()[pos]
             }
@@ -98,7 +98,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) {
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
+            target: RecyclerView.ViewHolder,
         ): Boolean {
             return true
         }
@@ -134,39 +134,54 @@ class RideFragment : Fragment(R.layout.fragment_ride) {
             if (isGranted) {
                 // Permission is granted
                 grantedCount++
-            }
-            else {
+            } else {
                 // Permission is denied
                 //Snackbar.make(requireView(), "Permission $permissionName is denied", Snackbar.LENGTH_LONG).show()
 
-                // Show permission denied dialog
-                AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
-                    .setTitle("Permission Denied")
-                    .setMessage("Without $permissionName this app will not operate properly.\n\n" +
-                        "Please tap SETTINGS to open app settings and allow LOCATION permissions.")
-                    .setPositiveButton("Settings") { dialog, _ ->
-                        dialog.dismiss()
+                // show rationale if the user has denied the permission before
+                if (shouldShowRequestPermissionRationale(permissionName)) {
+                    AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                        .setTitle("Permission Denied")
+                        .setMessage("Without $permissionName permission this app will not operate properly.\n\n" +
+                                "Tap OK the app to grant the permission.")
+                        .setPositiveButton("OK") { dialog, _ ->
+                            requestLocationPermissions()
+                        }
+                        .setNegativeButton("Cancel") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                } else {
+                    // show settings dialog if the user has denied the permission before
+                    // Show permission denied dialog
+                    AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                        .setTitle("Permission Denied")
+                        .setMessage("Without $permissionName this app will not operate properly.\n\n" +
+                                "Please tap SETTINGS to open app settings and allow LOCATION permissions.")
+                        .setPositiveButton("Settings") { dialog, _ ->
+                            dialog.dismiss()
 
-                        // Open system settings to allow user to grant permissions
-                        val intent = Intent()
-                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                        val uri = Uri.fromParts("package", requireContext().packageName, null)
-                        intent.data = uri
-                        startActivity(intent)
+                            // Open system settings to allow user to grant permissions
+                            val intent = Intent()
+                            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            val uri = Uri.fromParts("package", requireContext().packageName, null)
+                            intent.data = uri
+                            startActivity(intent)
 
-                    }
-                    .setNegativeButton("Cancel") { dialog, _ ->
-                        // Show permission denied dialog
-                        AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
-                            .setTitle("Permission Denied")
-                            .setMessage("Without location permission this app will not operate properly.\n\n" +
-                                    "Please restart the app to grant the permission.")
-                            .setPositiveButton("OK") { dialog2, _ ->
-                                dialog2.dismiss()
-                            }
-                            .show()
-                    }
-                    .show()
+                        }
+                        .setNegativeButton("Cancel") { dialog, _ ->
+                            // Show permission denied dialog
+                            AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                                .setTitle("Permission Denied")
+                                .setMessage("Without location permission this app will not operate properly.\n\n" +
+                                        "Please restart the app to grant the permission.")
+                                .setPositiveButton("OK") { dialog2, _ ->
+                                    dialog2.dismiss()
+                                }
+                                .show()
+                        }
+                        .show()
+                }
 
                 return@registerForActivityResult
             }
@@ -182,7 +197,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) {
                 AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
                     .setTitle("Request Background Permission")
                     .setMessage("This app needs background location permission to track your rides properly.\n\n" +
-                        "Please tap OK, and accept ALLOW ALL THE TIME location permission on the next screen.")
+                            "Please tap OK, and accept ALLOW ALL THE TIME location permission on the next screen.")
                     .setPositiveButton("OK") { dialog, which ->
                         requestBackgroundLocationPermission()
                     }
@@ -195,13 +210,13 @@ class RideFragment : Fragment(R.layout.fragment_ride) {
                         AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
                             .setTitle("Permission Denied")
                             .setMessage("Without background location permission this app will not operate properly.\n\n" +
-                                "Please restart the app to grant the permission.")
+                                    "Please restart the app to grant the permission.")
                             .setPositiveButton("OK") { dialog2, _ ->
                                 dialog2.dismiss()
                             }
                             .show()
-                }
-                .show()
+                    }
+                    .show()
             }
         }
 
@@ -214,16 +229,16 @@ class RideFragment : Fragment(R.layout.fragment_ride) {
         ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
             // Permission is granted
-             Snackbar
-                 .make(requireView(), "Location permissions granted", Snackbar.LENGTH_SHORT)
-                 .show()
+            Snackbar
+                .make(requireView(), "Location permissions granted", Snackbar.LENGTH_SHORT)
+                .show()
         } else {
 
             // Show permission denied dialog
             AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
                 .setTitle("Permission Denied")
                 .setMessage("Without background location permission ALLOWED ALL THE TIME this app will not operate properly.\n\n" +
-                    "Please tap SETTINGS to open app settings and select ALLOW ALL THE TIME for location permission.")
+                        "Please tap SETTINGS to open app settings and select ALLOW ALL THE TIME for location permission.")
                 .setPositiveButton("Settings") { dialog, _ ->
                     dialog.dismiss()
 
