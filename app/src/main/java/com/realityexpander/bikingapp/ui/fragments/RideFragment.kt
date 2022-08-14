@@ -19,20 +19,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.realityexpander.bikingapp.R
 import com.realityexpander.bikingapp.adapters.RideAdapter
-import com.realityexpander.bikingapp.common.Constants.Companion.REQUEST_CODE_LOCATION_PERMISSION
-import com.realityexpander.bikingapp.common.SortType
-import com.realityexpander.bikingapp.common.TrackingUtility
-import com.realityexpander.bikingapp.ui.viewmodels.RideViewModel
-import com.google.android.material.snackbar.Snackbar
 import com.realityexpander.bikingapp.common.Constants
-import com.realityexpander.bikingapp.common.Constants.Companion.REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION
 import com.realityexpander.bikingapp.common.Permissions
+import com.realityexpander.bikingapp.common.SortType
+import com.realityexpander.bikingapp.ui.viewmodels.RideViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_ride.*
-//import pub.devrel.easypermissions.AppSettingsDialog
-//import pub.devrel.easypermissions.EasyPermissions
 import javax.inject.Inject
 
 @AndroidEntryPoint

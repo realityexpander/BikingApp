@@ -1,15 +1,6 @@
 package com.realityexpander.bikingapp.common
 
-import android.Manifest
-import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
-import android.util.Log
-import androidx.annotation.Size
-import androidx.core.content.ContextCompat
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class TrackingUtility {
