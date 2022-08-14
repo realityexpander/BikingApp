@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.fragment_ride.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.PermissionCallbacks {
+class RideFragment : Fragment(R.layout.fragment_ride) {
 
     lateinit var rideAdapter: RideAdapter
 
