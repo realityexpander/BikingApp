@@ -122,7 +122,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
         }
     }
 
-    //////////////////////////////////////////
+    //////////////////////////////////////
     ///// Permissions                /////
 
     private val requestMultiplePermissions = registerForActivityResult(
@@ -161,7 +161,15 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
 
                     }
                     .setNegativeButton("Cancel") { dialog, _ ->
-                        dialog.dismiss()
+                        // Show permission denied dialog
+                        AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                            .setTitle("Permission Denied")
+                            .setMessage("Without location permission this app will not operate properly.\n\n" +
+                                    "Please restart the app to grant the permission.")
+                            .setPositiveButton("OK") { dialog2, _ ->
+                                dialog2.dismiss()
+                            }
+                            .show()
                     }
                     .show()
 
@@ -234,6 +242,16 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
+
+                    // Show permission denied dialog
+                    AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                        .setTitle("Permission Denied")
+                        .setMessage("Without background location permission this app will not operate properly.\n\n" +
+                                "Please restart the app to grant the permission.")
+                        .setPositiveButton("OK") { dialog2, _ ->
+                            dialog2.dismiss()
+                        }
+                        .show()
                 }
                 .show()
 
