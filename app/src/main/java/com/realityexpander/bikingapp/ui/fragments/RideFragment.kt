@@ -27,10 +27,11 @@ import com.realityexpander.bikingapp.ui.viewmodels.RideViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.realityexpander.bikingapp.common.Constants
 import com.realityexpander.bikingapp.common.Constants.Companion.REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION
+import com.realityexpander.bikingapp.common.Permissions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_ride.*
-import pub.devrel.easypermissions.AppSettingsDialog
-import pub.devrel.easypermissions.EasyPermissions
+//import pub.devrel.easypermissions.AppSettingsDialog
+//import pub.devrel.easypermissions.EasyPermissions
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -121,7 +122,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
     }
 
     //////////////////////////////////////////
-    ///// EasyPermissions                /////
+    ///// Permissions                /////
 
     private val requestMultiplePermissions = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -131,27 +132,22 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
 
         permissions.entries.forEach {
             // check whether each permission is granted or not
-            val permissionName = it.key
+            val permissionName = it.key.split(".")[2]
             val isGranted = it.value
 
             if (isGranted) {
                 // Permission is granted
                 grantedCount++
-            } else {
+            }
+            else {
                 // Permission is denied
                 //Snackbar.make(requireView(), "Permission $permissionName is denied", Snackbar.LENGTH_LONG).show()
-
-//                // Show alert dialog
-//                AppSettingsDialog.Builder(this)
-//                    .setThemeResId(R.style.AlertDialogTheme)
-//                    .build()
-//                    .show()
 
                 // Show permission denied dialog
                 val builder = android.app.AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
                 builder.setTitle("Permission Denied")
-                builder.setMessage("Without location permission this app will not operate properly.\n\n" +
-                        "Restart the app to grant the permission.")
+                builder.setMessage("Without $permissionName this app will not operate properly.\n\n" +
+                        "Please restart the app to grant the permission.")
                 builder.setPositiveButton("OK") { dialog, which ->
                     dialog.dismiss()
                 }
@@ -161,9 +157,10 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
             }
         }
 
+        // Have COARSE_LOCATION and FINE_LOCATION permissions have been granted?
         if (grantedCount == permissions.size) {
-            // COARSE and FINE permissions have been granted
-            // request background location permission, only on API >= Q
+
+            // Request `background location` permission, only on API >= Q
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 // Show request rationalization dialog
 
@@ -171,7 +168,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
                 val builder = android.app.AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
                 builder.setTitle("Request Permission")
                 builder.setMessage("This app needs background location permission to track your rides.\n\n" +
-                        "Please grant ALLOW ALL THE TIME.")
+                        "Please tap OK, and accept ALLOW ALL THE TIME location permission on the next screen.")
                 builder.setPositiveButton("OK") { dialog, which ->
                     requestBackgroundLocationPermission()
                 }
@@ -184,7 +181,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
                     val builder = android.app.AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
                     builder.setTitle("Permission Denied")
                     builder.setMessage("Without location permission this app will not operate properly.\n\n" +
-                            "Restart the app to grant the permission.")
+                            "Please restart the app to grant the permission.")
                     builder.setPositiveButton("OK") { dialog, which ->
                         dialog.dismiss()
                     }
@@ -207,24 +204,12 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
                  .make(requireView(), "Location permissions granted", Snackbar.LENGTH_SHORT)
                  .show()
         } else {
-//            // Show App settings for permissions
-//            AppSettingsDialog.Builder(this)
-//                .setThemeResId(R.style.AlertDialogTheme)
-//                .build()
-//                .show()
-
-//            // Open app settings
-//             val intent = Intent()
-//             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-//             val uri = Uri.fromParts("package", requireContext().packageName, null)
-//             intent.data = uri
-//             startActivity(intent)
 
             // Show permission denied dialog
             val builder = android.app.AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
             builder.setTitle("Permission Denied")
-            builder.setMessage("Without background location permission allowed ALL THE TIME this app will not operate properly.\n\n" +
-                    "Restart the app to grant the permission.")
+            builder.setMessage("Without background location permission ALLOWED ALL THE TIME this app will not operate properly.\n\n" +
+                    "Please restart the app to grant the permission.")
             builder.setPositiveButton("OK") { dialog, which ->
                 dialog.dismiss()
             }
@@ -235,7 +220,7 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
     }
 
     private fun requestLocationPermissions() {
-        if (TrackingUtility.hasLocationPermissions(requireContext())) {
+        if (Permissions.hasLocationPermissions(requireContext())) {
             return
         }
 
@@ -243,17 +228,8 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                //Manifest.permission.ACCESS_BACKGROUND_LOCATION  // this is only available on Q, and done in second step
             ))
 
-//        // Ask for FINE and COARSE location permissions first.
-//        EasyPermissions.requestPermissions(
-//            this,
-//            "Please accept location permissions to use this app",
-//            REQUEST_CODE_LOCATION_PERMISSION,
-//            Manifest.permission.ACCESS_FINE_LOCATION,
-//            Manifest.permission.ACCESS_COARSE_LOCATION,
-//        )
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -261,45 +237,6 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
 
         requestSinglePermission.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
     }
-
-//    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-//        // If permissions are denied, allow user to choose to go to app settings to manually grant permissions.
-//        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-//            AppSettingsDialog.Builder(this)
-//                .setThemeResId(R.style.AlertDialogTheme)
-//                .build()
-//                .show()
-//        } else {
-//            requestLocationPermissions()
-//        }
-//    }
-//
-//    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-//
-//        // FOR VERSION_CODE >= Q, we need to request background location permission as well.
-//        // After accepting the COARSE and FINE location permission,
-//        //   we must ask for BACKGROUND_LOCATION permission to be enabled.
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//            if(requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
-//                EasyPermissions.requestPermissions(
-//                    this,
-//                    "Please accept ALLOW ALL THE TIME location permissions to use this app",
-//                    REQUEST_CODE_BACKGROUND_LOCATION_PERMISSION,
-//                    Manifest.permission.ACCESS_BACKGROUND_LOCATION  // must be asked after ACCESS_FINE_LOCATION & ACCESS_COARSE_LOCATION
-//                )
-//            }
-//        }
-//    }
-//
-//    // Pass this android system callback to EasyPermissions to handle the result of the permission request.
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<out String>,
-//        grantResults: IntArray
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-//    }
 
 
     //////////////////////////////////////

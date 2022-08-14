@@ -105,9 +105,6 @@ dependencies {
     //implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
 
-    // Easy Permissions
-    implementation 'pub.devrel:easypermissions:3.0.0'
-
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 

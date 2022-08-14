@@ -1,37 +1,25 @@
 package com.realityexpander.bikingapp.common
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
-import pub.devrel.easypermissions.EasyPermissions
+import android.util.Log
+import androidx.annotation.Size
+import androidx.core.content.ContextCompat
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class TrackingUtility {
 
     companion object {
-        // Checks for necessary location permissions
-        fun hasLocationPermissions(context: Context): Boolean {
-            return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                EasyPermissions.hasPermissions(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            } else {
-                EasyPermissions.hasPermissions(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                )
-            }
-        }
 
         // Converts milliseconds to HH:MM:SS string, optionally with milliseconds HH:MM:SS.mm
         fun getFormattedStopWatchTime(
             ms: Long,
-            includeMillis: Boolean = false
+            includeMillis: Boolean = false,
         ): String {
             var milliseconds = ms
             val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
