@@ -48,6 +48,13 @@
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
     </style>
 
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">#EEEEEE</item>
+        <item name="android:colorBackground">#333333</item>
+        <item name="android:windowBackground">#333333</item>
+    </style>
+
+
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textSize">14sp</item>
