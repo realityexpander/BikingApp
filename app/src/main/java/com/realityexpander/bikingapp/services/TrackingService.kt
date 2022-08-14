@@ -27,6 +27,7 @@ import com.realityexpander.bikingapp.common.Constants.Companion.LOCATION_UPDATE_
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_CHANNEL_ID
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_CHANNEL_NAME
 import com.realityexpander.bikingapp.common.Constants.Companion.NOTIFICATION_ID
+import com.realityexpander.bikingapp.common.Permissions
 import com.realityexpander.bikingapp.common.SegmentsOfPolyLatLngLines
 import com.realityexpander.bikingapp.common.TrackingUtility
 import dagger.hilt.android.AndroidEntryPoint
@@ -127,7 +128,7 @@ class TrackingService : LifecycleService() {  // inherit from LifecycleService t
     @SuppressLint("MissingPermission") // done with EasyPermissions, but for some reason the compiler doesn't see it
     private fun updateRequestLocationUpdates(isTracking: Boolean) {
         if (isTracking) {
-            if (TrackingUtility.hasLocationPermissions(this)) {
+            if (Permissions.hasLocationPermissions(this)) {
                 val request = LocationRequest.create().apply {
                     interval = LOCATION_UPDATE_INTERVAL
                     fastestInterval = LOCATION_UPDATE_FASTEST_INTERVAL

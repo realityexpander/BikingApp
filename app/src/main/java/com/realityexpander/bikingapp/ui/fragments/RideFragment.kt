@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -144,14 +145,25 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
                 //Snackbar.make(requireView(), "Permission $permissionName is denied", Snackbar.LENGTH_LONG).show()
 
                 // Show permission denied dialog
-                val builder = android.app.AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
-                builder.setTitle("Permission Denied")
-                builder.setMessage("Without $permissionName this app will not operate properly.\n\n" +
-                        "Please restart the app to grant the permission.")
-                builder.setPositiveButton("OK") { dialog, which ->
-                    dialog.dismiss()
-                }
-                builder.show()
+                AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                    .setTitle("Permission Denied")
+                    .setMessage("Without $permissionName this app will not operate properly.\n\n" +
+                        "Please tap SETTINGS to open app settings and allow LOCATION permissions.")
+                    .setPositiveButton("Settings") { dialog, _ ->
+                        dialog.dismiss()
+
+                        // Open system settings to allow user to grant permissions
+                        val intent = Intent()
+                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        val uri = Uri.fromParts("package", requireContext().packageName, null)
+                        intent.data = uri
+                        startActivity(intent)
+
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
 
                 return@registerForActivityResult
             }
@@ -162,32 +174,31 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
 
             // Request `background location` permission, only on API >= Q
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
                 // Show request rationalization dialog
-
-                // show simple alert dialog
-                val builder = android.app.AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
-                builder.setTitle("Request Permission")
-                builder.setMessage("This app needs background location permission to track your rides.\n\n" +
+                AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                    .setTitle("Request Background Permission")
+                    .setMessage("This app needs background location permission to track your rides properly.\n\n" +
                         "Please tap OK, and accept ALLOW ALL THE TIME location permission on the next screen.")
-                builder.setPositiveButton("OK") { dialog, which ->
-                    requestBackgroundLocationPermission()
-                }
-                builder.setNegativeButton("Cancel") { dialog, which ->
-                    dialog.dismiss()
-
-                    isCancelled = true
-
-                    // Show permission denied dialog
-                    val builder = android.app.AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
-                    builder.setTitle("Permission Denied")
-                    builder.setMessage("Without location permission this app will not operate properly.\n\n" +
-                            "Please restart the app to grant the permission.")
-                    builder.setPositiveButton("OK") { dialog, which ->
-                        dialog.dismiss()
+                    .setPositiveButton("OK") { dialog, which ->
+                        requestBackgroundLocationPermission()
                     }
-                    builder.show()
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+
+                        isCancelled = true
+
+                        // Show permission denied dialog
+                        AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                            .setTitle("Permission Denied")
+                            .setMessage("Without background location permission this app will not operate properly.\n\n" +
+                                "Please restart the app to grant the permission.")
+                            .setPositiveButton("OK") { dialog2, _ ->
+                                dialog2.dismiss()
+                            }
+                            .show()
                 }
-                builder.show()
+                .show()
             }
         }
 
@@ -206,14 +217,25 @@ class RideFragment : Fragment(R.layout.fragment_ride) { //, EasyPermissions.Perm
         } else {
 
             // Show permission denied dialog
-            val builder = android.app.AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
-            builder.setTitle("Permission Denied")
-            builder.setMessage("Without background location permission ALLOWED ALL THE TIME this app will not operate properly.\n\n" +
-                    "Please restart the app to grant the permission.")
-            builder.setPositiveButton("OK") { dialog, which ->
-                dialog.dismiss()
-            }
-            builder.show()
+            AlertDialog.Builder(requireContext(), R.style.AlertDialogCustom)
+                .setTitle("Permission Denied")
+                .setMessage("Without background location permission ALLOWED ALL THE TIME this app will not operate properly.\n\n" +
+                    "Please tap SETTINGS to open app settings and select ALLOW ALL THE TIME for location permission.")
+                .setPositiveButton("Settings") { dialog, _ ->
+                    dialog.dismiss()
+
+                    // Open system settings to allow user to grant permissions
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    val uri = Uri.fromParts("package", requireContext().packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
 
             return@registerForActivityResult
         }
